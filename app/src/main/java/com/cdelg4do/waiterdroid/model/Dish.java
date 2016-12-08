@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Dish {
 
-    // Class attributes
+    // Object attributes
     public final String name;
     public final String description;
     public final URL imageUrl;
@@ -41,5 +41,26 @@ public class Dish {
     // Adds a new allergen to the dish
     public void addAllergen(Allergen newAllergen) {
         allergens.add(newAllergen);
+    }
+
+    // Returns a string with the dish info (for debugging)
+    @Override
+    public String toString() {
+
+        String res = "\nName: " + name + ", Description: " + description + ", Price: " + price + ", Image: ";
+
+        if (imageUrl == null)
+            res += "<none>";
+        else
+            res += imageUrl;
+
+        res += "\nAllergens: " + allergens.size();
+
+        for (Allergen a: allergens) {
+
+            res += "\n" + a;
+        }
+
+        return res;
     }
 }

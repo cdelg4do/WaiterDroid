@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Table {
 
-    // Class attributes
+    // Object attributes
     private String mName;
     private ArrayList<Order> mOrders;
 

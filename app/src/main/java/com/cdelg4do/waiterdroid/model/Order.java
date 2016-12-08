@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Order {
 
-    // Class attributes
+    // Object attributes
     private Dish mDish;
     private String mNotes;
 

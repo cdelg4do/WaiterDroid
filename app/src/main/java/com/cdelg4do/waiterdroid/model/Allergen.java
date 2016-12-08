@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class Allergen {
 
-    // Class attributes
+    // Object attributes
     public final int id;
     public final String name;
     public final URL imageUrl;
@@ -26,5 +26,22 @@ public class Allergen {
         catch (MalformedURLException e) {   url = null;               }
 
         this.imageUrl = url;
+    }
+
+
+    // Other methods:
+
+    // Returns a string with the allergen info (for debugging)
+    @Override
+    public String toString() {
+
+        String res = "Id: " + id + ", Name: " + name + ", Image: ";
+
+        if (imageUrl == null)
+            res += "<none>";
+        else
+            res += imageUrl.toString();
+
+        return res;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class RestaurantManager {
 
-    // Class attributes
+    // Object attributes
     private Date mMenuDate;
     private BigDecimal mMenuVersion;
     private String mCurrency;
@@ -25,17 +25,16 @@ public class RestaurantManager {
 
     // Class constructor
     // (initializes all attributes, but doesn't populate the allergen and dish lists)
-    public RestaurantManager(Date menuDate, BigDecimal menuVersion, String currency, BigDecimal taxRate, int tableCount, String tablePrefix) {
+    public RestaurantManager(Date menuDate, String currency, BigDecimal taxRate, int tableCount, String tablePrefix) {
 
         mMenuDate = menuDate;
-        mMenuVersion = menuVersion;
         mCurrency = currency;
         mTaxRate = taxRate;
         this.availableAllergens = new ArrayList<Allergen>();
         this.availableDishes = new ArrayList<Dish>();
         this.tables = new ArrayList<Table>();
 
-        for (int i=0; i<tableCount; i++)
+        for (int i=1; i<=tableCount; i++)
             tables.add(new Table(tablePrefix + " " + i));
     }
 
@@ -44,10 +43,6 @@ public class RestaurantManager {
 
     public Date getMenuDate() {
         return mMenuDate;
-    }
-
-    public BigDecimal getMenuVersion() {
-        return mMenuVersion;
     }
 
     public String getCurrency() {
@@ -68,7 +63,7 @@ public class RestaurantManager {
 
     // Returns the count of available dishes
     public int dishCount() {
-        return availableAllergens.size();
+        return availableDishes.size();
     }
 
     // Returns the count of tables
@@ -86,7 +81,7 @@ public class RestaurantManager {
         return availableDishes.add(newDish);
     }
 
-    // Returns the available allergen with a given id, or null if id doesn't exist
+    // Returns the available allergen with a given taskId, or null if taskId doesn't exist
     public Allergen getAllergenById(int searchId) {
 
         for (Allergen a: availableAllergens) {
@@ -118,8 +113,8 @@ public class RestaurantManager {
     }
 
     // Assigns to a dish the allergens corresponding to a given array of ids
-    // (if some id doesn't correspond to any available allergen, it is ignored)
-    public void setDishAllergens(Dish dish, int[] allergenIds) {
+    // (if some taskId doesn't correspond to any available allergen, it is ignored)
+    public void setDishAllergens(Dish dish, ArrayList<Integer> allergenIds) {
 
         for (int id: allergenIds) {
 
@@ -139,5 +134,23 @@ public class RestaurantManager {
         BigDecimal taxes = base.multiply(mTaxRate);
 
         return base.add(taxes);
+    }
+
+    // Returns a string with the significant data of this restaurant manager (for debugging)
+    @Override
+    public String toString() {
+
+        String res = "Date: " + getMenuDate();
+        res += "\nCurrency: " + getCurrency();
+        res += "\nTax rate: " + getTaxRate();
+        res += "\nTables: " + tableCount();
+        res += "\nTotal Allergens: " + allergenCount();
+        res += "\nTotal Dishes: " + dishCount();
+
+        for (int i=0; i<dishCount(); i++) {
+            res += "\n" + getDishAtPosition(i);
+        }
+
+        return res;
     }
 }
