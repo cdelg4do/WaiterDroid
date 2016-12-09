@@ -53,6 +53,10 @@ public class RestaurantManager {
         return mTaxRate;
     }
 
+    public ArrayList<Table> getTables() {
+        return tables;
+    }
+
 
     // Other methods:
 

@@ -56,6 +56,10 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
         return mTask.operationId();
     }
 
+    public Object getResult() {
+        return mTask.getResult();
+    }
+
 
     // Methods inherited from AsyncTask:
 
@@ -77,10 +81,8 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
 
         boolean success = mTask.execute();
 
-        if ( !success ) {
-            //cancel(true);
+        if ( !success )
             mOperationFailed = true;
-        }
 
         return success;
     }

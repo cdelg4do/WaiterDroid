@@ -1,5 +1,6 @@
 package com.cdelg4do.waiterdroid.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,9 +8,10 @@ import java.util.ArrayList;
 
 
 // This class represents an available dish on the restaurants menu.
+// Implements the Serializable interface so that it can be passed inside a bundle object.
 // ----------------------------------------------------------------------------
 
-public class Dish {
+public class Dish implements Serializable {
 
     // Object attributes
     public final String name;

@@ -1,13 +1,15 @@
 package com.cdelg4do.waiterdroid.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 
 // This class represents a table of the restaurant, with all its orders.
+// Implements the Serializable interface so that it can be passed inside a bundle object.
 // ----------------------------------------------------------------------------
 
-public class Table {
+public class Table implements Serializable {
 
     // Object attributes
     private String mName;

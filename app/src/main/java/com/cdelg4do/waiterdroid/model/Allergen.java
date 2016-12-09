@@ -1,13 +1,15 @@
 package com.cdelg4do.waiterdroid.model;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 
 // This class represents a possible allergen that might be present in a dish.
+// Implements the Serializable interface so that it can be passed inside a bundle object.
 // ----------------------------------------------------------------------------
 
-public class Allergen {
+public class Allergen implements Serializable {
 
     // Object attributes
     public final int id;

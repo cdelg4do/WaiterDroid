@@ -2,13 +2,15 @@ package com.cdelg4do.waiterdroid.model;
 
 
 // This class represents a dish ordered by some customer.
+// Implements the Serializable interface so that it can be passed inside a bundle object.
 // ----------------------------------------------------------------------------
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Order {
+public class Order implements Serializable {
 
     // Object attributes
     private Dish mDish;

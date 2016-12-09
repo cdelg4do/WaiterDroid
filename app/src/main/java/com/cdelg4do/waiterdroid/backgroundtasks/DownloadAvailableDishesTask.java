@@ -19,7 +19,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 
 
 // This class represents the task to download the available dishes from a remote server.
@@ -76,7 +75,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
             return false;
 
         // Connect and download the data
-        InputStream input = null;
+        InputStream input;
         StringBuilder sb;
 
         try {
@@ -121,7 +120,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
             // Now we can create the RestaurantManager and populate it
-            restaurantMgr = new RestaurantManager(date,currency,taxRate,tableCount,"Table");
+            restaurantMgr = new RestaurantManager(date,currency,taxRate,tableCount,"Mesa");
 
 
             // List of available allergens
