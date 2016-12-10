@@ -31,6 +31,9 @@ public class Table implements Serializable {
         return mName;
     }
 
+    public ArrayList<Order> getOrders() {
+        return mOrders;
+    }
 
     // Other methods:
 

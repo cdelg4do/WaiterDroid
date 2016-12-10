@@ -42,12 +42,12 @@ public class Order implements Serializable {
     // Other methods:
 
     // Gets the dish name
-    public String getName() {
+    public String getDishName() {
         return mDish.name;
     }
 
     // Gets the dish description
-    public String getDescription() {
+    public String getDishDescription() {
         return mDish.description;
     }
 

@@ -118,6 +118,15 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
             BigDecimal taxRate = new BigDecimal( jsonRoot.getString("tax") );
             int tableCount = jsonRoot.getInt("tables");
 
+            // Make sure that there is at least one table. If not, stop the process
+            if (tableCount <= 0) {
+                Log.d("DownloadDishesTask", "ERROR: the 'tables' value must be greater than 0");
+                return false;
+            }
+
+            // Other possible checks: 'date' is correct, 'currency' is not empty, 'tax' is less than 1.0, etc.
+            // ...
+
 
             // Now we can create the RestaurantManager and populate it
             restaurantMgr = new RestaurantManager(date,currency,taxRate,tableCount,"Mesa");
@@ -193,6 +202,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
         // If we made it till here, the operation was completed successfully
+        restaurantMgr.generateRandomOrders();;
         return true;
     }
 

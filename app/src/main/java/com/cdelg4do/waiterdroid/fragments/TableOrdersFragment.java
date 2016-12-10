@@ -11,47 +11,31 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.cdelg4do.waiterdroid.R;
-import com.cdelg4do.waiterdroid.adapters.TableListAdapter;
-import com.cdelg4do.waiterdroid.model.Table;
+import com.cdelg4do.waiterdroid.adapters.OrderListAdapter;
+import com.cdelg4do.waiterdroid.model.Order;
 
 import java.util.ArrayList;
 
 
-// This class represents the fragment showing the list of existing tables.
+// This class represents the fragment showing the list of orders from a table.
 // ----------------------------------------------------------------------------
 
-public class TableListFragment extends Fragment {
+public class TableOrdersFragment extends Fragment {
 
     // Class attributes
     private static final String MODEL_KEY = "model";
 
     // Object attributes
-    private ArrayList<Table> tableList;                         // Model for this fragment
-    private OnTableSelectedListener onTableSelectedListener;    // Table List listener
+    private ArrayList<Order> orderList;                         // Model for this fragment
+    private OnOrderSelectedListener onOrderSelectedListener;    // Table List listener
 
 
-    // Class constructor:
+    // Class "constructor":
 
-    /* If some data must be passed to a fragment, using a newInstance() method is
-     * the preferred way to create a fragment, instead of overloading the default constructor:
-     *
-     *  - If Android destroys and recreates the Fragment later, it will call the no-argument
-     *   constructor of the fragment. That is why overloading the constructor is not recommended.
-     *
-     * - The way to pass data to a Fragment so that they are available after fragment recreation
-     *   is to pass a bundle to the setArguments method (so data must be Serializable/Parcelable)
-     *
-     *   Later, in the Fragment onCreate(), data can be accessed by calling:
-     *   getArguments().get("key"); if the data is an Object
-     *   getArguments().getInt("my_key",0); if the data is an int, etc.
-     *
-     * - Remember: setArguments() can only be called BEFORE the fragment is attached to an Activity.
-    */
-
-    public static TableListFragment newInstance(ArrayList<Table> model) {
+    public static TableOrdersFragment newInstance(ArrayList<Order> model) {
 
         // Create the new fragment (using the default constructor)
-        TableListFragment fragment = new TableListFragment();
+        TableOrdersFragment fragment = new TableOrdersFragment();
 
         // We do not keep the model here, just passing it in a bundle to setArguments()
         // (it will be recovered later, in the onCreate() method)
@@ -76,7 +60,7 @@ public class TableListFragment extends Fragment {
 
         // Try to get the model from the passed arguments (see the newInstance() method)
         if (getArguments() != null)
-            tableList = (ArrayList<Table>) getArguments().getSerializable(MODEL_KEY);
+            orderList = (ArrayList<Order>) getArguments().getSerializable(MODEL_KEY);
     }
 
 
@@ -87,12 +71,12 @@ public class TableListFragment extends Fragment {
 
         // Make sure that the fragment context implements the OnTableSelectedListener interface:
         // If so, keep the reference to it.
-        if (context instanceof OnTableSelectedListener)
-            onTableSelectedListener = (OnTableSelectedListener) context;
+        if (context instanceof OnOrderSelectedListener)
+            onOrderSelectedListener = (OnOrderSelectedListener) context;
 
         // If not, throw an exception (will terminate the program).
         else
-            throw new RuntimeException(context.toString() + " must implement OnTableSelectedListener");
+            throw new RuntimeException(context.toString() + " must implement OnOrderSelectedListener");
     }
 
 
@@ -104,13 +88,13 @@ public class TableListFragment extends Fragment {
 
         // Get the root view of the fragment based on its corresponding layout
         // It will be attached to container (which is the corresponding activity view), but not yet
-        View rootView = inflater.inflate(R.layout.fragment_table_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_table_orders, container, false);
 
         // Reference to UI elements
         ListView list = (ListView) rootView.findViewById(android.R.id.list);
 
         // Adapter to load the table list into the view
-        TableListAdapter adapter = new TableListAdapter(getActivity(),tableList);
+        OrderListAdapter adapter = new OrderListAdapter(getActivity(),orderList);
 
         // Assign the adapter to the list
         list.setAdapter(adapter);
@@ -121,8 +105,8 @@ public class TableListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if (onTableSelectedListener != null)
-                    onTableSelectedListener.onTableSelected(tableList.get(position), position);
+                if (onOrderSelectedListener != null)
+                    onOrderSelectedListener.onOrderSelected(orderList.get(position), position);
             }
         });
 
@@ -137,13 +121,13 @@ public class TableListFragment extends Fragment {
         super.onDetach();
 
         // Remove the reference to the table listener
-        onTableSelectedListener = null;
+        onOrderSelectedListener = null;
     }
 
 
     // Interface to be implemented by any activity/context that contains this fragment
-    public interface OnTableSelectedListener {
+    public interface OnOrderSelectedListener {
 
-        void onTableSelected(Table table, int pos);
+        void onOrderSelected(Order order, int pos);
     }
 }

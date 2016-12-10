@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.widget.Toast;
 
+import java.util.Random;
+
 /**
  * Created by Carlos on 08/12/2016.
  */
@@ -48,7 +50,23 @@ public abstract class Utils {
 
             dialog.show();
         }
+    }
 
+
+    public static int randomInt(int min, int max) {
+
+        if (min==max)
+            return min;
+
+        if (min > max) {
+            int newMin = max;
+            max = min;
+            min = newMin;
+        }
+
+        Random rnd = new Random();
+        int num = rnd.nextInt((max-min)+1) + min;
+        return num;
     }
 
 

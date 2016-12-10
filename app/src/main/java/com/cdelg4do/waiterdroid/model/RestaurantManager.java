@@ -2,9 +2,12 @@ package com.cdelg4do.waiterdroid.model;
 
 import android.util.Log;
 
+import com.cdelg4do.waiterdroid.utils.Utils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 
 // This class contains and manages all the data in the app model.
@@ -156,5 +159,47 @@ public class RestaurantManager {
         }
 
         return res;
+    }
+
+    // Generates test data
+    public void generateRandomOrders() {
+
+        Log.d("RestaurantManager","\nGenerando datos de prueba...\n");
+
+        if (tables.size() < 1 || availableDishes.size() < 1 )
+            return;
+
+        ArrayList<String> possibleNotes = new ArrayList<String>();
+
+        possibleNotes.add("");
+        possibleNotes.add("Con sacarina.");
+        possibleNotes.add("Agitado, no batido.");
+        possibleNotes.add("Con dos piedras de hielo y en copa ancha.");
+        possibleNotes.add("Que esté bien hecho, el cliente detesta la carne cruda.");
+        possibleNotes.add("Servido a la mitad en dos platos, para los niños.");
+        possibleNotes.add("Sin cebolla.");
+        possibleNotes.add("Sin mayonesa.");
+        possibleNotes.add("Con dos gotas de brandy.");
+
+        // How many tables will have some order
+        int tablesOrdering = Utils.randomInt(1, tables.size() );
+
+        for (int i=0; i<tablesOrdering-1; i++) {
+
+            Table table = tables.get(i);
+
+            // How many orders will have this table
+            int orderCount = Utils.randomInt(1, availableDishes.size() );
+
+            for (int j=1; j<orderCount; j++) {
+
+                // Dish to order
+                int dishIndex = Utils.randomInt(1, availableDishes.size() ) - 1;
+                int noteIndex = Utils.randomInt(1, possibleNotes.size()) - 1;
+
+                Order newOrder = new Order(availableDishes.get(dishIndex), possibleNotes.get(noteIndex));
+                table.addOrder(newOrder);
+            }
+        }
     }
 }
