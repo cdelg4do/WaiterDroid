@@ -85,7 +85,7 @@ public class OrderListAdapter extends BaseAdapter {
             convertView.setEnabled(false);
         }
 
-        // If there are orders to show in the model, construct the view as usual
+        // If there are orders to show in the model, construct the row view as usual
         else {
 
             if (convertView == null)
@@ -101,6 +101,9 @@ public class OrderListAdapter extends BaseAdapter {
             orderNotes.setText( orderList.get(pos).getNotes() );
 
             // dishImage.setImageBitmap(...);
+
+            // The user can select this row
+            convertView.setEnabled(true);
         }
 
 

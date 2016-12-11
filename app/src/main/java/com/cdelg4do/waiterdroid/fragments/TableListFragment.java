@@ -1,5 +1,6 @@
 package com.cdelg4do.waiterdroid.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +31,7 @@ public class TableListFragment extends Fragment {
     private OnTableSelectedListener onTableSelectedListener;    // Table List listener
 
 
-    // Class constructor:
+    // Class "constructor":
 
     /* If some data must be passed to a fragment, using a newInstance() method is
      * the preferred way to create a fragment, instead of overloading the default constructor:
@@ -81,6 +82,7 @@ public class TableListFragment extends Fragment {
 
 
     // This method is called when a fragment is first attached to its context
+    // (for devices having at least API 23 OR using android.support.v4.app.Fragment)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -93,6 +95,17 @@ public class TableListFragment extends Fragment {
         // If not, throw an exception (will terminate the program).
         else
             throw new RuntimeException(context.toString() + " must implement OnTableSelectedListener");
+    }
+
+    // Same as previous, but using the deprecated onAttach(Activity) instead the newer onAttach(Context)
+    // (called when using android.app.Fragment, or when device API is under 23)
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (getActivity() instanceof OnTableSelectedListener)
+            onTableSelectedListener = (OnTableSelectedListener) getActivity();
+        else
+            throw new RuntimeException(getActivity().toString() + " must implement OnTableSelectedListener");
     }
 
 

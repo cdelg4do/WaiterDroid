@@ -1,5 +1,6 @@
 package com.cdelg4do.waiterdroid.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -77,6 +78,17 @@ public class TableOrdersFragment extends Fragment {
         // If not, throw an exception (will terminate the program).
         else
             throw new RuntimeException(context.toString() + " must implement OnOrderSelectedListener");
+    }
+
+    // Same as previous, but using the deprecated onAttach(Activity) instead the newer onAttach(Context)
+    // (called when using android.app.Fragment, or when device API is under 23)
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (getActivity() instanceof OnOrderSelectedListener)
+            onOrderSelectedListener = (OnOrderSelectedListener) getActivity();
+        else
+            throw new RuntimeException(getActivity().toString() + " must implement OnOrderSelectedListener");
     }
 
 

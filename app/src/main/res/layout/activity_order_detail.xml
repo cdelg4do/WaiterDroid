@@ -7,7 +7,7 @@
     <include layout="@layout/main_toolbar" />
 
     <FrameLayout
-        android:id="@+id/fragment_table_list"
+        android:id="@+id/fragment_order_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

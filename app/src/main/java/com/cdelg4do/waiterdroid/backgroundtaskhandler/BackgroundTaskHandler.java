@@ -52,12 +52,12 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
         return mTask;
     }
 
-    public String operationId() {
-        return mTask.operationId();
+    public String getTaskId() {
+        return mTask.getId();
     }
 
-    public Object getResult() {
-        return mTask.getResult();
+    public Object getTaskProduct() {
+        return mTask.getProduct();
     }
 
 
@@ -72,14 +72,17 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
         if ( mProgress != null )
             mProgress.show();
 
-        Log.d("BackgroundTaskHandler","INFO: Starting task " + mTask.operationId() );
+        Log.d("BackgroundTaskHandler","INFO: Starting task " + mTask.getId() );
     }
 
     // What to do DURING the background operation (on a background thread)
     @Override
     protected Boolean doInBackground(Void... params) {
 
-        boolean success = mTask.execute();
+        boolean success = false;
+
+        if ( mTask != null )
+            success = mTask.execute();
 
         if ( !success )
             mOperationFailed = true;
@@ -91,29 +94,33 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
 
-        Log.d("BackgroundTaskHandler","INFO: Finished task " + mTask.operationId() );
+        Log.d("BackgroundTaskHandler","INFO: Finished task " + mTask.getId() );
 
         super.onPostExecute(result);
 
         if ( mProgress != null )
             mProgress.dismiss();
 
-        mListener.onBackgroundTaskFinshed(this);
+        if ( mListener != null )
+            mListener.onBackgroundTaskFinshed(this);
     }
 
     // What to do on the UI thread if the background operation was cancelled
     @Override
     protected void onCancelled() {
 
-        Log.d("BackgroundTaskHandler","INFO: Cancelled task " + mTask.operationId() );
+        Log.d("BackgroundTaskHandler","INFO: Cancelled task " + mTask.getId() );
 
-        mTask.cancel();
+        if ( mTask != null )
+            mTask.cancel();
+
         mOperationFailed = true;
 
         if ( mProgress != null )
             mProgress.dismiss();
 
-        mListener.onBackgroundTaskFinshed(this);
+        if ( mListener != null )
+            mListener.onBackgroundTaskFinshed(this);
     }
 
 

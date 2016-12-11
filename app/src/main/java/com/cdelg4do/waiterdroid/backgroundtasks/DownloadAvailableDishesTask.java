@@ -52,12 +52,12 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
     // Methods inherited from BackgroundTaskRunnable
 
     // Resturns the restaurantMgr of the execution (a new RestaurantManager object)
-    public RestaurantManager getResult() {
+    public RestaurantManager getProduct() {
         return restaurantMgr;
     }
 
     // Returns the operation taskId (to identify what operation was executed)
-    public String operationId() {
+    public String getId() {
         return taskId;
     }
 

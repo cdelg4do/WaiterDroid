@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:isScrollContainer="true"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/layoutButtons">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txtOrderPos"
+                android:text="Order Pos:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/txtDishName"
+                android:text="Dish Name:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"/>
+
+            <ImageView
+                android:id="@+id/imgDishImage"
+                android:src="@android:drawable/ic_notification_clear_all"
+                android:layout_height="225dp"
+                android:layout_width="225dp"
+                android:background="@android:color/white"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="false"
+                android:isScrollContainer="false"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:text="Dish Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtDishDescription"
+                android:paddingBottom="10dp"/>
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listAllergens"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:text="Notes:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCaptionNotes"
+                android:paddingBottom="10dp"/>
+
+            <EditText
+                android:background="@drawable/rounded_border_edittext"
+                android:layout_width="match_parent"
+                android:ems="10"
+                android:id="@+id/txtNotes"
+                android:layout_height="100dp"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="top"
+                android:hint="Escribe aquí las notas adicionales para este pedido, o déjalo en blanco si no hay ninguna nota adicional."
+                />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutButtons"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:text="Cancel"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="30dp">
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btnOk"
+            android:text="Ok"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

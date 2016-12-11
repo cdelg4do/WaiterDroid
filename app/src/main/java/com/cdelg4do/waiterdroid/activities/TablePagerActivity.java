@@ -1,6 +1,8 @@
 package com.cdelg4do.waiterdroid.activities;
 
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +23,9 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
     // Class attributes
     public static final String TABLE_LIST_KEY = "tableList";
     public static final String INITIAL_POS_KEY = "currentPos";
+
+    private static final int REQUEST_EDIT_ORDER = 1;
+
 
     // Object attributes
     private ArrayList<Table> tableList;
@@ -69,15 +74,36 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         }
     }
 
+    // This method is called when another activity called with startActivityForResult() sends response back
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    // Methods inherited from the TableListFragment.OnOrderSelectedListener interface:
+        // If coming back from the Order Detail Activity
+        if (requestCode == REQUEST_EDIT_ORDER) {
 
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Refresh the pager view in case something changed
+                //int pos = data.getIntExtra(OrderDetailActivity.ORDER_KEY, -1);
+                // ...
+            }
+        }
+    }
+
+
+    // Methods inherited from the TableOrdersFragment.OnOrderSelectedListener interface:
+
+    // What to do when a row in the order list is selected
+    // (launch the order detail activity, and wait for some response back)
     @Override
     public void onOrderSelected(Order order, int pos) {
 
-        String title = "Pedido seleccionado";
-        String msg = "Pos: " + pos + " (" + order.getDishDescription() + ")";
+        Intent intent = new Intent(this, OrderDetailActivity.class);
 
-        Utils.showMessage(this, msg, Utils.MessageType.DIALOG, title);
+        intent.putExtra(OrderDetailActivity.ORDER_KEY, order);
+        intent.putExtra(OrderDetailActivity.POS_KEY, pos);
+
+        startActivityForResult(intent, REQUEST_EDIT_ORDER);
     }
 }

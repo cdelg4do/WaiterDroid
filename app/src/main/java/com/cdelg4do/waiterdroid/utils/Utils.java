@@ -3,7 +3,12 @@ package com.cdelg4do.waiterdroid.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.cdelg4do.waiterdroid.adapters.AllergenListAdapter;
 
 import java.util.Random;
 
@@ -67,6 +72,29 @@ public abstract class Utils {
         Random rnd = new Random();
         int num = rnd.nextInt((max-min)+1) + min;
         return num;
+    }
+
+
+    // This method is useful when using a ListView inside an ScrollView
+    // (https://kennethflynn.wordpress.com/2012/09/12/putting-android-listviews-in-scrollviews/)
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        AllergenListAdapter listAdapter = (AllergenListAdapter) listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
 
