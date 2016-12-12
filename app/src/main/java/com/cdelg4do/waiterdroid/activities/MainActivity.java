@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
+        // If we already downloaded the data from the server, don't do anything
+        if ( RestaurantManager.isSingletonReady() )
+            return;
 
         // Before loading any fragment, try to download the dishes from the server
         ProgressDialog pDialog = new ProgressDialog(this);
