@@ -12,15 +12,15 @@ import android.util.Log;
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
-import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
-public class TablePagerActivity extends AppCompatActivity implements TableOrdersFragment.OnOrderSelectedListener {
+public class TablePagerActivity extends AppCompatActivity implements TableOrdersFragment.TableOrdersFragmentListener {
 
     // Class attributes
     public static final String INITIAL_POS_KEY = "currentPos";
 
     private static final int REQUEST_EDIT_ORDER = 1;
+    private static final int REQUEST_ADD_ORDER = 2;
 
 
     // Object attributes
@@ -96,10 +96,32 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
                 pagerFragment.syncView(tablePos);
             }
         }
+
+        // If coming back from the Dish List Activity
+        if (requestCode == REQUEST_ADD_ORDER) {
+
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Reference to the pager fragment, if it exists
+                TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+
+                if ( pagerFragment == null )
+                    return;
+
+                // Get the data returned by the Detail Activity
+                int tablePos = data.getIntExtra(DishListActivity.TABLE_POS_KEY, -1);
+
+                if (tablePos == -1 )
+                    return;
+
+                // Update the Fragment view
+                pagerFragment.syncView(tablePos);
+            }
+        }
     }
 
 
-    // Methods inherited from the TableOrdersFragment.OnOrderSelectedListener interface:
+    // Methods inherited from the TableOrdersFragment.TableOrdersFragmentListener interface:
 
     // What to do when a row in the order list is selected
     // (launch the order detail activity, and wait for some response back)
@@ -112,5 +134,17 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         intent.putExtra(OrderDetailActivity.TABLE_POS_KEY, tablePos);
 
         startActivityForResult(intent, REQUEST_EDIT_ORDER);
+    }
+
+    // What to do when a row in the order list is selected
+    // (launch the dish list activity to choose a dish, and wait for some response back)
+    @Override
+    public void onAddOrderClicked(int tablePos) {
+
+        Intent intent = new Intent(this, DishListActivity.class);
+
+        intent.putExtra(DishListActivity.TABLE_POS_KEY, tablePos);
+
+        startActivityForResult(intent, REQUEST_ADD_ORDER);
     }
 }

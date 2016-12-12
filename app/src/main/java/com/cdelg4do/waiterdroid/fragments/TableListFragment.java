@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ViewSwitcher;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.adapters.TableListAdapter;
+import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
+import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class TableListFragment extends Fragment {
     // Object attributes
     private ArrayList<Table> tableList;                         // Model for this fragment
     private OnTableSelectedListener onTableSelectedListener;    // Table List listener
+    ListView list;
 
 
     // Class "constructor":
@@ -120,7 +124,7 @@ public class TableListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_table_list, container, false);
 
         // Reference to UI elements
-        ListView list = (ListView) rootView.findViewById(android.R.id.list);
+        list = (ListView) rootView.findViewById(android.R.id.list);
 
         // Adapter to load the table list into the view
         TableListAdapter adapter = new TableListAdapter(getActivity(),tableList);
@@ -151,6 +155,18 @@ public class TableListFragment extends Fragment {
 
         // Remove the reference to the table listener
         onTableSelectedListener = null;
+    }
+
+
+    // Auxliliar methods:
+
+    // Syncs the view by assigning it a new adapter with an updated table list
+    public void syncView() {
+
+        tableList = RestaurantManager.getTables();
+
+        TableListAdapter adapter = new TableListAdapter(getActivity(),tableList);
+        list.setAdapter(adapter);
     }
 
 

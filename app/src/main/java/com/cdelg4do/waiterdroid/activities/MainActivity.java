@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.cdelg4do.waiterdroid.R;
@@ -32,13 +30,15 @@ import com.cdelg4do.waiterdroid.utils.Utils;
 //
 // - TableListFragment.OnTableSelectedListener: in order to do some action when a table is selected.
 //
-// - TableOrdersFragment.OnOrderSelectedListener: in order to do some action when an order is selected.
+// - TableOrdersFragment.TableOrdersFragmentListener: in order to do some action when an order is selected.
 // ----------------------------------------------------------------------------
 
-public class MainActivity extends AppCompatActivity implements BackgroundTaskListener, TableListFragment.OnTableSelectedListener, TableOrdersFragment.OnOrderSelectedListener {
+public class MainActivity extends AppCompatActivity implements BackgroundTaskListener, TableListFragment.OnTableSelectedListener, TableOrdersFragment.TableOrdersFragmentListener {
 
     // Class attributes
     private static final int REQUEST_EDIT_ORDER = 1;
+    private static final int REQUEST_ADD_ORDER = 2;
+    private static final int REQUEST_SHOW_PAGER = 3;
 
     // Methods inherited from AppCompatActivity:
 
@@ -46,15 +46,6 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Device display info
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        int width = metrics.widthPixels;                    // Width in pixels
-        int height = metrics.heightPixels;                  // Height in pixels
-        int dpWidth = (int) (width / metrics.density);      // Width in dp
-        int dpHeight = (int) (height / metrics.density);    // Height in dp
-        int dpi = metrics.densityDpi;                       // Density in dpi
-        String model = Build.MODEL;                         // Device model
 
         // Reference to the UI elements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,6 +77,18 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // If coming back from the Pager Activity
+        // (no need to get data returned, just update the table list in case something changed)
+        if (requestCode == REQUEST_SHOW_PAGER) {
+
+            // Try to refresh the table list fragment, if it exists (it always should)
+            TableListFragment listFragment = (TableListFragment) getFragmentManager().findFragmentById(R.id.fragment_table_list);
+
+            if ( listFragment != null ) {
+                listFragment.syncView();
+            }
+        }
+
         // If coming back from the Order Detail Activity
         if (requestCode == REQUEST_EDIT_ORDER) {
 
@@ -106,6 +109,36 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
                 // Update the Fragment view
                 pagerFragment.syncView(tablePos);
+            }
+        }
+
+        // If coming back from the Dish List Activity
+        if (requestCode == REQUEST_ADD_ORDER) {
+
+            if (resultCode == Activity.RESULT_OK) {
+
+                // Try to refresh the pager fragment, if it exists
+                TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+
+                if ( pagerFragment != null ) {
+
+                    // Get the data returned by the Dish List Activity
+                    int tablePos = data.getIntExtra(DishListActivity.TABLE_POS_KEY, -1);
+
+                    if (tablePos == -1)
+                        return;
+
+                    // Update the Fragment view
+                    pagerFragment.syncView(tablePos);
+                }
+
+                // Try to refresh the table list fragment, if it exists (it always should)
+                TableListFragment listFragment = (TableListFragment) getFragmentManager().findFragmentById(R.id.fragment_table_list);
+
+                if ( listFragment != null ) {
+                    listFragment.syncView();
+                }
+
             }
         }
     }
@@ -133,13 +166,14 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             Intent intent = new Intent(this, TablePagerActivity.class);
             intent.putExtra(TablePagerActivity.INITIAL_POS_KEY, pos);
-            startActivity(intent);
+            //startActivity(intent);
+            startActivityForResult(intent, REQUEST_SHOW_PAGER);
         }
 
     }
 
 
-    // Methods inherited from the TableOrdersFragment.OnOrderSelectedListener interface:
+    // Methods inherited from the TableOrdersFragment.TableOrdersFragmentListener interface:
 
     // What to do when a row in the order list is selected
     // (launch the order detail activity, and wait for some response back)
@@ -152,6 +186,18 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         intent.putExtra(OrderDetailActivity.TABLE_POS_KEY, tablePos);
 
         startActivityForResult(intent, REQUEST_EDIT_ORDER);
+    }
+
+    // What to do when a row in the order list is selected
+    // (launch the dish list activity to choose a dish, and wait for some response back)
+    @Override
+    public void onAddOrderClicked(int tablePos) {
+
+        Intent intent = new Intent(this, DishListActivity.class);
+
+        intent.putExtra(DishListActivity.TABLE_POS_KEY, tablePos);
+
+        startActivityForResult(intent, REQUEST_ADD_ORDER);
     }
 
 

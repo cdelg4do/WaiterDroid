@@ -144,7 +144,8 @@ public class TablePagerFragment extends Fragment {
         viewPager.setCurrentItem(position);
     }
 
-    //
+    // Syncs the view by assigning it a new adapter with an updated table list,
+    // and moves the pager to the given position
     public void syncView(int tablePos) {
 
         tableList = RestaurantManager.getTables();

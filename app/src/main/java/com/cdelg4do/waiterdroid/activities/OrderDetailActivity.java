@@ -114,7 +114,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // Update the order with the (possible) changes made on this fragment
+                // Update the order with the (possible) changes made on this activity
                 mOrder.setNotes( txtNotes.getText().toString() );
 
                 int resultCode = RESULT_OK;

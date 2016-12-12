@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class TableOrdersFragment extends Fragment {
     // Object attributes
     private ArrayList<Order> orderList;                         // The order list to show
     private int tablePos;                                       // Position of the table the orders belong to, in the table list
-    private OnOrderSelectedListener onOrderSelectedListener;    // Table List listener
+    private TableOrdersFragmentListener tableOrdersFragmentListener;    // Table List listener
 
 
     // Class "constructor":
@@ -77,12 +78,12 @@ public class TableOrdersFragment extends Fragment {
 
         // Make sure that the fragment context implements the OnTableSelectedListener interface:
         // If so, keep the reference to it.
-        if (context instanceof OnOrderSelectedListener)
-            onOrderSelectedListener = (OnOrderSelectedListener) context;
+        if (context instanceof TableOrdersFragmentListener)
+            tableOrdersFragmentListener = (TableOrdersFragmentListener) context;
 
         // If not, throw an exception (will terminate the program).
         else
-            throw new RuntimeException(context.toString() + " must implement OnOrderSelectedListener");
+            throw new RuntimeException(context.toString() + " must implement TableOrdersFragmentListener");
     }
 
     // Same as previous, but using the deprecated onAttach(Activity) instead the newer onAttach(Context)
@@ -90,10 +91,10 @@ public class TableOrdersFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (getActivity() instanceof OnOrderSelectedListener)
-            onOrderSelectedListener = (OnOrderSelectedListener) getActivity();
+        if (getActivity() instanceof TableOrdersFragmentListener)
+            tableOrdersFragmentListener = (TableOrdersFragmentListener) getActivity();
         else
-            throw new RuntimeException(getActivity().toString() + " must implement OnOrderSelectedListener");
+            throw new RuntimeException(getActivity().toString() + " must implement TableOrdersFragmentListener");
     }
 
 
@@ -109,6 +110,7 @@ public class TableOrdersFragment extends Fragment {
 
         // Reference to UI elements
         ListView list = (ListView) rootView.findViewById(android.R.id.list);
+        FloatingActionButton btnAddOrder = (FloatingActionButton) rootView.findViewById(R.id.btnAddOrder);
 
         // Adapter to load the table list into the view
         OrderListAdapter adapter = new OrderListAdapter(getActivity(),orderList);
@@ -122,8 +124,18 @@ public class TableOrdersFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int orderPos, long l) {
 
-                if (onOrderSelectedListener != null)
-                    onOrderSelectedListener.onOrderSelected(orderPos, tablePos);
+                if (tableOrdersFragmentListener != null)
+                    tableOrdersFragmentListener.onOrderSelected(orderPos, tablePos);
+            }
+        });
+
+        // Listener for the Add Order button
+        btnAddOrder.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (tableOrdersFragmentListener != null)
+                    tableOrdersFragmentListener.onAddOrderClicked(tablePos);
             }
         });
 
@@ -138,13 +150,15 @@ public class TableOrdersFragment extends Fragment {
         super.onDetach();
 
         // Remove the reference to the table listener
-        onOrderSelectedListener = null;
+        tableOrdersFragmentListener = null;
     }
 
 
     // Interface to be implemented by any activity/context that contains this fragment
-    public interface OnOrderSelectedListener {
+    public interface TableOrdersFragmentListener {
 
         void onOrderSelected(int orderPos, int tablePos);
+
+        void onAddOrderClicked(int tablePos);
     }
 }

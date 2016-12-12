@@ -79,6 +79,14 @@ public class RestaurantManager {
         return singleton.mTaxRate;
     }
 
+    public static ArrayList<Dish> getDishes() {
+
+        if (singleton == null)
+            return null;
+
+        return singleton.availableDishes;
+    }
+
     public static ArrayList<Table> getTables() {
 
         if (singleton == null)
