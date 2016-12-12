@@ -35,7 +35,7 @@ public class TablePagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         Table table = tableList.get(position);
-        TableOrdersFragment fragment = TableOrdersFragment.newInstance( table.getOrders() );
+        TableOrdersFragment fragment = TableOrdersFragment.newInstance(table.getOrders(),position);
 
         return fragment;
     }

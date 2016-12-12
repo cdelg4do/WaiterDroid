@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.model.Allergen;
-import com.cdelg4do.waiterdroid.model.Order;
 
 import java.util.ArrayList;
 
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 public class AllergenListAdapter extends BaseAdapter {
 
     // Class attributes
-    private final static int rowlayout = R.layout.allergen_row;
+    private final static int rowlayout = R.layout.row_allergen;
 
     // Object attributes
     private final ArrayList<Allergen> allergenList;
@@ -52,6 +51,12 @@ public class AllergenListAdapter extends BaseAdapter {
         return allergenList.get(pos);
     }
 
+    // Determines if a row of the list can be selected
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
     // Gets the allergen id at a given position (not used)
     @Override
     public long getItemId(int pos)
@@ -73,9 +78,6 @@ public class AllergenListAdapter extends BaseAdapter {
         // Sync the view with the allergen list data
         allergenName.setText( allergenList.get(pos).name );
         // allergenImage.setImageBitmap(...);
-
-        // The user cannot select rows of the list view
-        convertView.setEnabled(false);
 
         return convertView;
     }

@@ -24,16 +24,18 @@ import java.util.ArrayList;
 public class TableOrdersFragment extends Fragment {
 
     // Class attributes
-    private static final String MODEL_KEY = "model";
+    private static final String ORDERS_KEY = "orders";
+    private static final String TABLE_KEY = "table";
 
     // Object attributes
-    private ArrayList<Order> orderList;                         // Model for this fragment
+    private ArrayList<Order> orderList;                         // The order list to show
+    private int tablePos;                                       // Position of the table the orders belong to, in the table list
     private OnOrderSelectedListener onOrderSelectedListener;    // Table List listener
 
 
     // Class "constructor":
 
-    public static TableOrdersFragment newInstance(ArrayList<Order> model) {
+    public static TableOrdersFragment newInstance(ArrayList<Order> orders, int table) {
 
         // Create the new fragment (using the default constructor)
         TableOrdersFragment fragment = new TableOrdersFragment();
@@ -41,7 +43,8 @@ public class TableOrdersFragment extends Fragment {
         // We do not keep the model here, just passing it in a bundle to setArguments()
         // (it will be recovered later, in the onCreate() method)
         Bundle arguments = new Bundle();
-        arguments.putSerializable(MODEL_KEY, model);
+        arguments.putSerializable(ORDERS_KEY, orders);
+        arguments.putSerializable(TABLE_KEY, table);
         fragment.setArguments(arguments);
 
         // Return the new fragment
@@ -59,9 +62,11 @@ public class TableOrdersFragment extends Fragment {
         // Indicates if this fragment would populate a menu (true) by calling onCreateOptionsMenu()
         setHasOptionsMenu(true);
 
-        // Try to get the model from the passed arguments (see the newInstance() method)
-        if (getArguments() != null)
-            orderList = (ArrayList<Order>) getArguments().getSerializable(MODEL_KEY);
+        // Try to get the passed arguments (see the newInstance() method)
+        if (getArguments() != null) {
+            orderList = (ArrayList<Order>) getArguments().getSerializable(ORDERS_KEY);
+            tablePos = getArguments().getInt(TABLE_KEY);
+        }
     }
 
 
@@ -111,14 +116,14 @@ public class TableOrdersFragment extends Fragment {
         // Assign the adapter to the list
         list.setAdapter(adapter);
 
-        // Assign a listener to the list to execute some action when a row is selected
+        // Assign a listener to the list to execute some action when an order is selected
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int orderPos, long l) {
 
                 if (onOrderSelectedListener != null)
-                    onOrderSelectedListener.onOrderSelected(orderList.get(position), position);
+                    onOrderSelectedListener.onOrderSelected(orderPos, tablePos);
             }
         });
 
@@ -140,6 +145,6 @@ public class TableOrdersFragment extends Fragment {
     // Interface to be implemented by any activity/context that contains this fragment
     public interface OnOrderSelectedListener {
 
-        void onOrderSelected(Order order, int pos);
+        void onOrderSelected(int orderPos, int tablePos);
     }
 }

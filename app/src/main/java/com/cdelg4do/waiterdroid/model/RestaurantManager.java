@@ -7,17 +7,20 @@ import com.cdelg4do.waiterdroid.utils.Utils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
 
 
 // This class contains and manages all the data in the app model.
+// This class is a singleton object, and all its methods are static.
 // ----------------------------------------------------------------------------
 
 public class RestaurantManager {
 
+    // Class attributes
+    private static RestaurantManager singleton;   // The singleton object stored in the class
+
+
     // Object attributes
     private Date mMenuDate;
-    private BigDecimal mMenuVersion;
     private String mCurrency;
     private BigDecimal mTaxRate;
 
@@ -26,9 +29,11 @@ public class RestaurantManager {
     private ArrayList<Table> tables;
 
 
-    // Class constructor
-    // (initializes all attributes, but doesn't populate the allergen and dish lists)
-    public RestaurantManager(Date menuDate, String currency, BigDecimal taxRate, int tableCount, String tablePrefix) {
+    // Class constructors:
+
+    // Initializes all attributes, but doesn't populate the allergen and dish lists
+    // (the constructor is private, use newInstance() to create a new object from outside)
+    private RestaurantManager(Date menuDate, String currency, BigDecimal taxRate, int tableCount, String tablePrefix) {
 
         mMenuDate = menuDate;
         mCurrency = currency;
@@ -41,57 +46,154 @@ public class RestaurantManager {
             tables.add(new Table(tablePrefix + " " + i));
     }
 
+    // Creates a new instance of the singleton object
+    public static void newInstance(Date menuDate, String currency, BigDecimal taxRate, int tableCount, String tablePrefix) {
+
+        singleton = new RestaurantManager(menuDate, currency, taxRate, tableCount, tablePrefix);
+    }
+
 
     // Class getters:
 
-    public Date getMenuDate() {
-        return mMenuDate;
+    public static Date getMenuDate() {
+
+        if (singleton == null)
+            return null;
+
+        return singleton.mMenuDate;
     }
 
-    public String getCurrency() {
-        return mCurrency;
+    public static String getCurrency() {
+
+        if (singleton == null)
+            return null;
+
+        return singleton.mCurrency;
     }
 
-    public BigDecimal getTaxRate() {
-        return mTaxRate;
+    public static BigDecimal getTaxRate() {
+
+        if (singleton == null)
+            return null;
+
+        return singleton.mTaxRate;
     }
 
-    public ArrayList<Table> getTables() {
-        return tables;
+    public static ArrayList<Table> getTables() {
+
+        if (singleton == null)
+            return null;
+
+        return singleton.tables;
+    }
+
+
+    // These methods are 'syntactic sugar' class getters
+
+    public static Dish getDishAtPos(int pos) {
+
+        if (singleton == null)
+            return null;
+
+        try {
+            return singleton.availableDishes.get(pos);
+        }
+        catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public static Table getTableAtPos(int pos) {
+
+        if (singleton == null)
+            return null;
+
+        try {
+            return singleton.tables.get(pos);
+        }
+        catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public static Order getOrderAtPos_InTable(int orderPos, int tablePos) {
+
+        if (singleton == null)
+            return null;
+
+        Table table = getTableAtPos(tablePos);
+
+        if ( table == null )
+            return null;
+
+        try {
+            return table.getOrders().get(orderPos);
+        }
+        catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
 
     // Other methods:
 
+    // Indicates if the singleton object has been properly initialized
+    public static boolean isSingletonReady() {
+        return ( singleton != null);
+    }
+
     // Returns the count of available allergens
-    public int allergenCount() {
-        return availableAllergens.size();
+    public static int allergenCount() {
+
+        if (singleton == null)
+            return 0;
+
+        return singleton.availableAllergens.size();
     }
 
     // Returns the count of available dishes
-    public int dishCount() {
-        return availableDishes.size();
+    public static int dishCount() {
+
+        if (singleton == null)
+            return 0;
+
+        return singleton.availableDishes.size();
     }
 
     // Returns the count of tables
-    public int tableCount() {
-        return tables.size();
+    public static int tableCount() {
+
+        if (singleton == null)
+            return 0;
+
+        return singleton.tables.size();
     }
 
     // Adds a new allergen to the list of available allergens
-    public boolean addAllergen(Allergen newAllergen) {
-        return availableAllergens.add(newAllergen);
+    public static boolean addAllergen(Allergen newAllergen) {
+
+        if (singleton == null)
+            return false;
+
+        return singleton.availableAllergens.add(newAllergen);
     }
 
     // Adds a new dish to the list of available dishes
-    public boolean addDish(Dish newDish) {
-        return availableDishes.add(newDish);
+    public static boolean addDish(Dish newDish) {
+
+        if (singleton == null)
+            return false;
+
+        return singleton.availableDishes.add(newDish);
     }
 
     // Returns the available allergen with a given taskId, or null if taskId doesn't exist
-    public Allergen getAllergenById(int searchId) {
+    public static Allergen getAllergenById(int searchId) {
 
-        for (Allergen a: availableAllergens) {
+        if (singleton == null)
+            return null;
+
+        for (Allergen a: singleton.availableAllergens) {
 
             if (a.id == searchId) {
                 return a;
@@ -102,26 +204,26 @@ public class RestaurantManager {
     }
 
     // Returns the available dish at a given position, or null if pos is out of range
-    public Dish getDishAtPosition(int pos) {
+    public static Dish getDishAtPosition(int pos) {
 
-        if (pos < 0 || pos >= availableDishes.size() )
+        if (singleton == null || pos < 0 || pos >= singleton.availableDishes.size() )
             return null;
 
-        return availableDishes.get(pos);
+        return singleton.availableDishes.get(pos);
     }
 
     // Returns the table at a given position, or null if pos is out of range
-    public Table getTableAtPosition(int pos) {
+    public static Table getTableAtPosition(int pos) {
 
-        if (pos < 0 || pos >= tables.size() )
+        if (singleton == null || pos < 0 || pos >= singleton.tables.size() )
             return null;
 
-        return tables.get(pos);
+        return singleton.tables.get(pos);
     }
 
     // Assigns to a dish the allergens corresponding to a given array of ids
     // (if some taskId doesn't correspond to any available allergen, it is ignored)
-    public void setDishAllergens(Dish dish, ArrayList<Integer> allergenIds) {
+    public static void setDishAllergens(Dish dish, ArrayList<Integer> allergenIds) {
 
         for (int id: allergenIds) {
 
@@ -135,17 +237,25 @@ public class RestaurantManager {
     }
 
     // Gets the final price for all the orders of a given table (including taxes)
-    public BigDecimal finalPriceForTable(Table table) {
+    public static BigDecimal finalPriceForTable(Table table) {
+
+        if (singleton == null)
+            return null;
 
         BigDecimal base = table.priceBeforeTax();
-        BigDecimal taxes = base.multiply(mTaxRate);
+        BigDecimal taxes = base.multiply(singleton.mTaxRate);
 
         return base.add(taxes);
     }
 
+
+    // Methods for debugging only:
+
     // Returns a string with the significant data of this restaurant manager (for debugging)
-    @Override
-    public String toString() {
+    public static String contentToString() {
+
+        if (singleton == null)
+            return "<The singleton RestaurantManager was not instantiated yet>";
 
         String res = "Date: " + getMenuDate();
         res += "\nCurrency: " + getCurrency();
@@ -162,11 +272,14 @@ public class RestaurantManager {
     }
 
     // Generates test data
-    public void generateRandomOrders() {
+    public static void generateRandomOrders() {
 
-        Log.d("RestaurantManager","\nGenerando datos de prueba...\n");
+        if (singleton == null)
+            return;
 
-        if (tables.size() < 1 || availableDishes.size() < 1 )
+        Log.d("RestaurantManager","\nGenerating random test data...\n");
+
+        if (singleton.tables.size() < 1 || singleton.availableDishes.size() < 1 )
             return;
 
         ArrayList<String> possibleNotes = new ArrayList<String>();
@@ -182,22 +295,22 @@ public class RestaurantManager {
         possibleNotes.add("Con dos gotas de brandy.");
 
         // How many tables will have some order
-        int tablesOrdering = Utils.randomInt(1, tables.size() );
+        int tablesOrdering = Utils.randomInt(1, singleton.tables.size() );
 
         for (int i=0; i<tablesOrdering-1; i++) {
 
-            Table table = tables.get(i);
+            Table table = singleton.tables.get(i);
 
             // How many orders will have this table
-            int orderCount = Utils.randomInt(1, availableDishes.size() );
+            int orderCount = Utils.randomInt(1, singleton.availableDishes.size() );
 
             for (int j=1; j<orderCount; j++) {
 
                 // Dish to order
-                int dishIndex = Utils.randomInt(1, availableDishes.size() ) - 1;
+                int dishIndex = Utils.randomInt(1, singleton.availableDishes.size() ) - 1;
                 int noteIndex = Utils.randomInt(1, possibleNotes.size()) - 1;
 
-                Order newOrder = new Order(availableDishes.get(dishIndex), possibleNotes.get(noteIndex));
+                Order newOrder = new Order(singleton.availableDishes.get(dishIndex), possibleNotes.get(noteIndex));
                 table.addOrder(newOrder);
             }
         }

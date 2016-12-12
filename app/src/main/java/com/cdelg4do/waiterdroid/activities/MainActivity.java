@@ -5,15 +5,12 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
@@ -22,9 +19,7 @@ import com.cdelg4do.waiterdroid.backgroundtasks.DownloadAvailableDishesTask;
 import com.cdelg4do.waiterdroid.fragments.TableListFragment;
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
-import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
-import com.cdelg4do.waiterdroid.model.Table;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 
@@ -44,10 +39,6 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
     // Class attributes
     private static final int REQUEST_EDIT_ORDER = 1;
-
-    // Object attributes
-    private RestaurantManager restaurantMgr;
-
 
     // Methods inherited from AppCompatActivity:
 
@@ -100,27 +91,23 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             if (resultCode == Activity.RESULT_OK) {
 
-                // Refresh the pager view in case something changed
-                //int pos = data.getIntExtra(OrderDetailActivity.ORDER_KEY, -1);
-                // ...
+                // Reference to the pager fragment, if it exists
+                TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+
+                if ( pagerFragment == null )
+                    return;
+
+                // Get the data returned by the Detail Activity
+                int tablePos = data.getIntExtra(OrderDetailActivity.TABLE_POS_KEY, -1);
+                int orderPos = data.getIntExtra(OrderDetailActivity.ORDER_POS_KEY, -1);
+
+                if (tablePos == -1 || orderPos == -1)
+                    return;
+
+                // Update the Fragment view
+                pagerFragment.syncView(tablePos);
             }
         }
-    }
-
-
-    // Methods inherited from the TableOrdersFragment.OnOrderSelectedListener interface:
-
-    // What to do when a row in the order list is selected
-    // (launch the order detail activity, and wait for some response back)
-    @Override
-    public void onOrderSelected(Order order, int pos) {
-
-        Intent intent = new Intent(this, OrderDetailActivity.class);
-
-        intent.putExtra(OrderDetailActivity.ORDER_KEY, order);
-        intent.putExtra(OrderDetailActivity.POS_KEY, pos);
-
-        startActivityForResult(intent, REQUEST_EDIT_ORDER);
     }
 
 
@@ -128,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
     // This method indicates what to do when a row in the table list is selected
     @Override
-    public void onTableSelected(Table table, int pos) {
+    public void onTableSelected(int pos) {
 
         TablePagerFragment pagerFragment = null;
 
@@ -138,20 +125,33 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
         // If the activity already had a TablePager fragment, just update it with the selected table
         if ( pagerFragment != null ) {
-            pagerFragment.showTable(pos);
+            pagerFragment.moveToPosition(pos);
         }
 
         // If the activity did not have a TablePager fragment, then call to a TablePagerActivity
         else {
 
             Intent intent = new Intent(this, TablePagerActivity.class);
-
-            intent.putExtra(TablePagerActivity.TABLE_LIST_KEY, restaurantMgr.getTables() );
             intent.putExtra(TablePagerActivity.INITIAL_POS_KEY, pos);
-
             startActivity(intent);
         }
 
+    }
+
+
+    // Methods inherited from the TableOrdersFragment.OnOrderSelectedListener interface:
+
+    // What to do when a row in the order list is selected
+    // (launch the order detail activity, and wait for some response back)
+    @Override
+    public void onOrderSelected(int orderPos, int tablePos) {
+
+        Intent intent = new Intent(this, OrderDetailActivity.class);
+
+        intent.putExtra(OrderDetailActivity.ORDER_POS_KEY, orderPos);
+        intent.putExtra(OrderDetailActivity.TABLE_POS_KEY, tablePos);
+
+        startActivityForResult(intent, REQUEST_EDIT_ORDER);
     }
 
 
@@ -164,21 +164,19 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         if ( taskHandler.getTaskId() == DownloadAvailableDishesTask.taskId ) {
 
             // If there were problems, show error message and finish
-            if ( taskHandler.hasFailed() || taskHandler.getTaskProduct() == null ) {
-                Log.d("MainActivity","ERROR: The data download has failed");
-                Utils.showMessage(this,"The data download has failed!",Utils.MessageType.DIALOG,"ERROR");
+            if ( taskHandler.hasFailed() ) {
+                String msg = "The data download has failed!";
+                Log.d("MainActivity","ERROR: " + msg);
+                Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
                 return;
             }
 
-            // If everything went OK, keep the Restaurant Manager returned by the background task
-            // and use it to load the activity fragment(s)
-            restaurantMgr = (RestaurantManager) taskHandler.getTaskProduct();
-
-            Log.d("MainActivity",restaurantMgr.toString());
-            Utils.showMessage(this,restaurantMgr.toString(),Utils.MessageType.DIALOG,"SUCCESS");
+            // If everything went OK, log the data contained in the RestaurantManager
+            Log.d("MainActivity",RestaurantManager.contentToString());
+            Utils.showMessage(this,"The remote data was downloaded successfully (" + RestaurantManager.dishCount() + " dishes in the menu)",Utils.MessageType.DIALOG,"INFO");
 
 
-            // Now we can proceed to load the fragment(s)
+            // Now we can proceed to load the fragment(s) contained in the activity
             loadActivityFragments();
         }
 
@@ -191,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     private void loadActivityFragments() {
 
         // In case this method was called before loading the remote data, do nothing
-        if ( restaurantMgr == null )
+        if ( !RestaurantManager.isSingletonReady() )
             return;
 
 
@@ -204,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
             // (if the activity was recreated in the past, it might have the fragment already).
             if ( fm.findFragmentById(R.id.fragment_table_list) == null ) {
 
-                TableListFragment tableListFragment = TableListFragment.newInstance( restaurantMgr.getTables() );
+                TableListFragment tableListFragment = TableListFragment.newInstance( RestaurantManager.getTables() );
 
                 fm.beginTransaction()
                         .add(R.id.fragment_table_list,tableListFragment)
@@ -218,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             if (fm.findFragmentById(R.id.fragment_table_pager) == null) {
 
-                TablePagerFragment tablePagerFragment = TablePagerFragment.newInstance(restaurantMgr.getTables(), 0);
+                TablePagerFragment tablePagerFragment = TablePagerFragment.newInstance(0);
 
                 fm.beginTransaction()
                         .add(R.id.fragment_table_pager, tablePagerFragment)

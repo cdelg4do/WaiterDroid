@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class OrderListAdapter extends BaseAdapter {
 
     // Class attributes
-    private final static int rowlayout = R.layout.order_row;
-    private final static int rowlayout_empty = R.layout.order_row_empty;
+    private final static int rowlayout = R.layout.row_order;
+    private final static int rowlayout_empty = R.layout.row_order_empty;
 
     // Object attributes
     private final ArrayList<Order> orderList;
@@ -58,6 +58,15 @@ public class OrderListAdapter extends BaseAdapter {
         return null;
     }
 
+    // Determines if a row of the list can be selected
+    @Override
+    public boolean isEnabled(int position) {
+
+        // Any row can be selected only if there are orders to show in the list.
+        // Otherwise, no one can be selected.
+        return ( !modelIsEmpty() );
+    }
+
     // Gets the order id at a given position (not used)
     @Override
     public long getItemId(int pos)
@@ -80,9 +89,6 @@ public class OrderListAdapter extends BaseAdapter {
 
             // Tell the user the table has no orders yet
             txtNoOrders.setText("Esta mesa no ha ordenado ningún plato aún.");
-
-            // The user cannot select this row
-            convertView.setEnabled(false);
         }
 
         // If there are orders to show in the model, construct the row view as usual
@@ -101,9 +107,6 @@ public class OrderListAdapter extends BaseAdapter {
             orderNotes.setText( orderList.get(pos).getNotes() );
 
             // dishImage.setImageBitmap(...);
-
-            // The user can select this row
-            convertView.setEnabled(true);
         }
 
 

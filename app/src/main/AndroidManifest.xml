@@ -10,17 +10,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TablePagerActivity">
+
+        <activity
+            android:name=".activities.TablePagerActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".activities.OrderDetailActivity">
+
+        <activity
+            android:name=".activities.OrderDetailActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
+
     </application>
 
 </manifest>

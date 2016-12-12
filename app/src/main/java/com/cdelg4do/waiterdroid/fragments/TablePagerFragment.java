@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
+import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
 
 import java.util.ArrayList;
@@ -25,18 +27,18 @@ import java.util.ArrayList;
 public class TablePagerFragment extends Fragment {
 
     // Class attributes
-    private static final String MODEL_KEY = "model";
+    //private static final String MODEL_KEY = "model";
     private static final String INDEX_KEY = "index";
 
     // Object attributes
-    private ArrayList<Table> tableList;     // Model for this fragment
+    private ArrayList<Table> tableList;  // Model for this fragment
     private int initialTableIndex;       // Index of the initial table
     private ViewPager viewPager;
 
 
     // Class constructor:
 
-    public static TablePagerFragment newInstance(ArrayList<Table> model, int tableIndex) {
+    public static TablePagerFragment newInstance(int tableIndex) {
 
         // Create the new fragment (using the default constructor)
         TablePagerFragment fragment = new TablePagerFragment();
@@ -44,7 +46,6 @@ public class TablePagerFragment extends Fragment {
         // We do not keep the parameters here, just passing them in a bundle to setArguments()
         // (they will be recovered later, in the onCreate() method)
         Bundle arguments = new Bundle();
-        arguments.putSerializable(MODEL_KEY, model);
         arguments.putInt(INDEX_KEY, tableIndex);
         fragment.setArguments(arguments);
 
@@ -64,11 +65,11 @@ public class TablePagerFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // Try to get the passed arguments of newInstance()
-        if (getArguments() != null) {
-
-            tableList = (ArrayList<Table>) getArguments().getSerializable(MODEL_KEY);
+        if (getArguments() != null)
             initialTableIndex = getArguments().getInt(INDEX_KEY);
-        }
+
+        // Get a reference to the table list
+        tableList = RestaurantManager.getTables();
 
         setHasOptionsMenu(true);
     }
@@ -139,8 +140,19 @@ public class TablePagerFragment extends Fragment {
     }
 
     // Updates the pager with the table in a given position
-    public void showTable(int position) {
+    public void moveToPosition(int position) {
         viewPager.setCurrentItem(position);
+    }
+
+    //
+    public void syncView(int tablePos) {
+
+        tableList = RestaurantManager.getTables();
+
+        TablePagerAdapter adapter = new TablePagerAdapter(getFragmentManager(),tableList);
+        viewPager.setAdapter(adapter);
+
+        moveToPosition(tablePos);
     }
 
 }

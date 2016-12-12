@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class TableListAdapter extends BaseAdapter {
 
     // Class attributes
-    private final static int rowlayout = R.layout.table_row;
+    private final static int rowlayout = R.layout.row_table;
 
     // Object attributes
     private final ArrayList<Table> tableList;
@@ -73,7 +73,7 @@ public class TableListAdapter extends BaseAdapter {
 
         int orderCount = tableList.get(pos).orderCount();
         if (orderCount == 0)
-            tableDetail.setText("No tiene ningún pedido en este momento");
+            tableDetail.setText("No tiene ningún pedido");
         else
             tableDetail.setText(orderCount + " pedidos");
 

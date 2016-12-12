@@ -32,15 +32,13 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
     // Object attributes:
-    private RestaurantManager restaurantMgr;
+    //private RestaurantManager restaurantMgr;
     private URL serviceUrl;
     private boolean isCancelled;
 
 
     // Constructor:
     public DownloadAvailableDishesTask(String stringUrl) {
-
-        restaurantMgr = null;
 
         try                             {   serviceUrl = new URL(stringUrl);   }
         catch (MalformedURLException e) {   serviceUrl = null;                 }
@@ -51,9 +49,11 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
     // Methods inherited from BackgroundTaskRunnable
 
-    // Resturns the restaurantMgr of the execution (a new RestaurantManager object)
-    public RestaurantManager getProduct() {
-        return restaurantMgr;
+    // This task does not return any product
+    // (actually the product is the RestaurantManager initialized,
+    // but that is a singleton object so there is no need to return anything here)
+    public Object getProduct() {
+        return null;
     }
 
     // Returns the operation taskId (to identify what operation was executed)
@@ -128,8 +128,8 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
             // ...
 
 
-            // Now we can create the RestaurantManager and populate it
-            restaurantMgr = new RestaurantManager(date,currency,taxRate,tableCount,"Mesa");
+            // Now we can initialize the RestaurantManager and populate it
+            RestaurantManager.newInstance(date,currency,taxRate,tableCount,"Mesa");
 
 
             // List of available allergens
@@ -143,7 +143,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
                 String aName = a.getString("name");
                 String aUrlString =  a.getString("icon");
 
-                restaurantMgr.addAllergen( new Allergen(aId,aName,aUrlString) );
+                RestaurantManager.addAllergen( new Allergen(aId,aName,aUrlString) );
             }
 
 
@@ -183,12 +183,12 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
                         da.add(daId);
                     }
 
-                    restaurantMgr.setDishAllergens(dish, da);
+                    RestaurantManager.setDishAllergens(dish, da);
                 }
 
 
                 // Finally, we add the current dish to the menu
-                restaurantMgr.addDish(dish);
+                RestaurantManager.addDish(dish);
             }
         }
         catch (Exception ex) {
@@ -196,13 +196,16 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
             Log.d("DownloadDishesTask", "ERROR: exception while parsing data");
             ex.printStackTrace();
 
-            restaurantMgr = null;
             return false;
         }
 
 
+        // Now that all JSON data should be stored in the RestaurantManager,
+        // we can generate some random orders for testing
+        RestaurantManager.generateRandomOrders();
+
+
         // If we made it till here, the operation was completed successfully
-        restaurantMgr.generateRandomOrders();;
         return true;
     }
 

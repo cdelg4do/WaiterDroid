@@ -13,22 +13,17 @@ import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
 import com.cdelg4do.waiterdroid.model.Order;
-import com.cdelg4do.waiterdroid.model.Table;
 import com.cdelg4do.waiterdroid.utils.Utils;
-
-import java.util.ArrayList;
 
 public class TablePagerActivity extends AppCompatActivity implements TableOrdersFragment.OnOrderSelectedListener {
 
     // Class attributes
-    public static final String TABLE_LIST_KEY = "tableList";
     public static final String INITIAL_POS_KEY = "currentPos";
 
     private static final int REQUEST_EDIT_ORDER = 1;
 
 
     // Object attributes
-    private ArrayList<Table> tableList;
     private int initialPos;
 
 
@@ -48,12 +43,12 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
 
 
         // Get the data from the intent passed by the previous activity
-        tableList = (ArrayList<Table>) getIntent().getSerializableExtra(TABLE_LIST_KEY);
         initialPos = getIntent().getIntExtra(INITIAL_POS_KEY,-1);
 
-        if ( tableList == null || initialPos == -1 ) {
-            Log.d("TablePagerActivity","ERROR: Missing data provided by the intent");
-            Utils.showMessage(this,"Missing data provided by the intent!",Utils.MessageType.DIALOG,"ERROR");
+        if ( initialPos == -1 ) {
+            String msg = "Missing data provided by the intent!";
+            Log.d("TablePagerActivity","ERROR: " + msg);
+            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 
@@ -66,7 +61,7 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         // (if the activity was recreated in the past, it might have the fragment already).
         if ( fm.findFragmentById(R.id.fragment_table_pager) == null ) {
 
-            TablePagerFragment pagerFragment = TablePagerFragment.newInstance(tableList,initialPos);
+            TablePagerFragment pagerFragment = TablePagerFragment.newInstance(initialPos);
 
             fm.beginTransaction()
                     .add(R.id.fragment_table_pager,pagerFragment)
@@ -84,9 +79,21 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
 
             if (resultCode == Activity.RESULT_OK) {
 
-                // Refresh the pager view in case something changed
-                //int pos = data.getIntExtra(OrderDetailActivity.ORDER_KEY, -1);
-                // ...
+                // Reference to the pager fragment, if it exists
+                TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+
+                if ( pagerFragment == null )
+                    return;
+
+                // Get the data returned by the Detail Activity
+                int tablePos = data.getIntExtra(OrderDetailActivity.TABLE_POS_KEY, -1);
+                int orderPos = data.getIntExtra(OrderDetailActivity.ORDER_POS_KEY, -1);
+
+                if (tablePos == -1 || orderPos == -1)
+                    return;
+
+                // Update the Fragment view
+                pagerFragment.syncView(tablePos);
             }
         }
     }
@@ -97,12 +104,12 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
     // What to do when a row in the order list is selected
     // (launch the order detail activity, and wait for some response back)
     @Override
-    public void onOrderSelected(Order order, int pos) {
+    public void onOrderSelected(int orderPos, int tablePos) {
 
         Intent intent = new Intent(this, OrderDetailActivity.class);
 
-        intent.putExtra(OrderDetailActivity.ORDER_KEY, order);
-        intent.putExtra(OrderDetailActivity.POS_KEY, pos);
+        intent.putExtra(OrderDetailActivity.ORDER_POS_KEY, orderPos);
+        intent.putExtra(OrderDetailActivity.TABLE_POS_KEY, tablePos);
 
         startActivityForResult(intent, REQUEST_EDIT_ORDER);
     }

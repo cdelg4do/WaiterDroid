@@ -135,7 +135,7 @@ public class TableListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 if (onTableSelectedListener != null)
-                    onTableSelectedListener.onTableSelected(tableList.get(position), position);
+                    onTableSelectedListener.onTableSelected(position);
             }
         });
 
@@ -157,6 +157,6 @@ public class TableListFragment extends Fragment {
     // Interface to be implemented by any activity/context that contains this fragment
     public interface OnTableSelectedListener {
 
-        void onTableSelected(Table table, int pos);
+        void onTableSelected(int pos);
     }
 }
