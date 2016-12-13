@@ -124,12 +124,6 @@ public class DishListFragment extends Fragment {
         return rootView;
     }
 
-    private void syncView() {
-
-        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener);
-        list.setAdapter(adapter);
-    }
-
 
     // This method is called when the fragment is no longer attached to its activity
     @Override
@@ -138,6 +132,14 @@ public class DishListFragment extends Fragment {
 
         // Remove the reference to the list listener
         onDishSelectedListener = null;
+    }
+
+
+    // Refreshes the list view by assigning it a new adapter with an updated model
+    private void syncView() {
+
+        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener);
+        list.setAdapter(adapter);
     }
 
 

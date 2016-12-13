@@ -10,11 +10,17 @@ import android.widget.Toast;
 
 import com.cdelg4do.waiterdroid.adapters.AllergenListAdapter;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
-/**
- * Created by Carlos on 08/12/2016.
- */
+
+// This class provides useful common auxiliar functions.
+// This class is abstract, and all its public methods are static.
+// ----------------------------------------------------------------------------
 
 public abstract class Utils {
 
@@ -58,6 +64,7 @@ public abstract class Utils {
     }
 
 
+    // Returns a random int, between min and max
     public static int randomInt(int min, int max) {
 
         if (min==max)
@@ -69,7 +76,7 @@ public abstract class Utils {
             min = newMin;
         }
 
-        Random rnd = new Random();
+        Random rnd = new Random( new Date().getTime() );
         int num = rnd.nextInt((max-min)+1) + min;
         return num;
     }
@@ -98,5 +105,31 @@ public abstract class Utils {
     }
 
 
+    // Gets the money string from a BigDecimal
+    public static String getMoneyString(BigDecimal num, String currency)
+    {
+        DecimalFormat formatter;
+        String res;
+
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(new Locale("es", "ES"));
+        formatter = new DecimalFormat("#,###.##",symbols);
+
+        res = formatter.format(num);
+
+        return twoDecimalsNumber( res , "," ) + " " + currency;
+    }
+
+
+    // Returns a string representing a number with 2 decimals
+    private static String twoDecimalsNumber(String num, String separator)
+    {
+        String res = num;
+        String[] temp = num.split(separator);
+
+        if ( temp.length == 2 && temp[1].length() == 1 )
+                res += "0";
+
+        return res;
+    }
 
 }

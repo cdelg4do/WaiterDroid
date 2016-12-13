@@ -75,7 +75,7 @@
                     android:text="Price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtPrice"
+                    android:id="@+id/txtDishPrice"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textStyle="normal|bold"

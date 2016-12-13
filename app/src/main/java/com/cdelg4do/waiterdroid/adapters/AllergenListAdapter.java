@@ -14,7 +14,7 @@ import com.cdelg4do.waiterdroid.model.Allergen;
 import java.util.ArrayList;
 
 
-// This class is the adapter needed by a ListView to represent the list of orders for a table.
+// This class is the adapter needed by a ListView to represent the list of allergens of a dish.
 // ----------------------------------------------------------------------------
 
 public class AllergenListAdapter extends BaseAdapter {

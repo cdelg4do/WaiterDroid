@@ -16,6 +16,9 @@ import com.cdelg4do.waiterdroid.model.Dish;
 import java.util.ArrayList;
 
 
+// This class is the adapter needed by a RecyclerView to represent the list of available dishes.
+// ----------------------------------------------------------------------------
+
 public class DishListAdapter extends RecyclerView.Adapter<DishListAdapter.DishViewHolder> {
 
     // Class attributes
@@ -82,7 +85,7 @@ public class DishListAdapter extends RecyclerView.Adapter<DishListAdapter.DishVi
             imgDish = (ImageView) view.findViewById(R.id.imgDish);
             txtDish = (TextView) view.findViewById(R.id.txtDish);
             gridAllergens = (GridView) view.findViewById(R.id.gridAllergens);
-            txtPrice = (TextView) view.findViewById(R.id.txtPrice);
+            txtPrice = (TextView) view.findViewById(R.id.txtDishPrice);
         }
 
         public void bindDish(Dish dish, Context context) {

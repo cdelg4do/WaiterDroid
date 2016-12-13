@@ -14,6 +14,14 @@ import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
+
+// This class represents the activity used to represent & navigate through the order list of all tables.
+//
+// Implements the following interfaces:
+//
+// - TableOrdersFragment.TableOrdersFragmentListener: in order to do some action when an order is selected.
+// ----------------------------------------------------------------------------
+
 public class TablePagerActivity extends AppCompatActivity implements TableOrdersFragment.TableOrdersFragmentListener {
 
     // Class attributes

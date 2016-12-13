@@ -1,17 +1,21 @@
 package com.cdelg4do.waiterdroid.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cdelg4do.waiterdroid.R;
+import com.cdelg4do.waiterdroid.activities.InvoiceActivity;
 import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
@@ -121,6 +125,53 @@ public class TablePagerFragment extends Fragment {
 
         // Return the root view of the fragment
         return rootView;
+    }
+
+    // Action bar menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_fragment_tablepager, menu);
+    }
+
+    // What to do when a menu option is clicked
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean superReturn = super.onOptionsItemSelected(item);
+
+        // Current table position in the pager
+        int currentTablePos = viewPager.getCurrentItem();
+
+        // Calculate the check for the current table
+        if (item.getItemId() == R.id.menu_calculateInvoice) {
+
+            Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+            intent.putExtra(InvoiceActivity.TABLE_POS_KEY, currentTablePos);
+            startActivity(intent);
+
+            return true;
+        }
+
+        // Clear the current table
+        else if (item.getItemId() == R.id.menu_emptyTable) {
+
+            Table currentTable = RestaurantManager.getTableAtPos(currentTablePos);
+            if ( currentTable != null )
+                currentTable.removeAllOrders();
+
+            // Try to refresh the table list fragment, if it exists (it always should)
+            TableListFragment listFragment = (TableListFragment) getFragmentManager().findFragmentById(R.id.fragment_table_list);
+            if ( listFragment != null )
+                listFragment.syncView();
+
+            // Try to refresh the pager fragment, if it exists
+            TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+            if ( pagerFragment != null )
+                pagerFragment.syncView(currentTablePos);
+        }
+
+        return superReturn;
     }
 
 

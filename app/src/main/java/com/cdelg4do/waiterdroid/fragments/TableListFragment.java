@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ViewSwitcher;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.adapters.TableListAdapter;
-import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
 

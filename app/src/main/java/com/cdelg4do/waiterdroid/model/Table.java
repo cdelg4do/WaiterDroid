@@ -3,6 +3,7 @@ package com.cdelg4do.waiterdroid.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 // This class represents a table of the restaurant, with all its orders.
@@ -61,6 +62,10 @@ public class Table implements Serializable {
         return mOrders.remove(order);
     }
 
+    public void removeAllOrders() {
+        mOrders.clear();
+    }
+
     // Gets the price for all the table orders (before taxes)
     public BigDecimal priceBeforeTax() {
 
@@ -70,5 +75,20 @@ public class Table implements Serializable {
             total = total.add( order.price() );
 
         return total;
+    }
+
+    public HashMap<Dish,Integer> getOrdersMap() {
+
+        HashMap<Dish,Integer> hm = new HashMap();
+
+        for (Order order: mOrders) {
+
+            Dish dish = order.getDish();
+
+            Integer count = hm.get(dish);
+            hm.put(dish, count == null ? 1 : count + 1);
+        }
+
+        return hm;
     }
 }

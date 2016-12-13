@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 // This class contains and manages all the data in the app model.
-// This class is a singleton object, and all its methods are static.
+// This class is a singleton object, and all its public methods are static.
 // ----------------------------------------------------------------------------
 
 public class RestaurantManager {

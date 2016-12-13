@@ -20,6 +20,9 @@ import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 
+// This class represents the activity used the information of an order belonging to a table.
+// ----------------------------------------------------------------------------
+
 public class OrderDetailActivity extends AppCompatActivity {
 
     // Class attributes

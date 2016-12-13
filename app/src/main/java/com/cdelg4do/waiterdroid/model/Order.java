@@ -34,6 +34,10 @@ public class Order implements Serializable {
 
     // Class getters:
 
+    public Dish getDish() {
+        return mDish;
+    }
+
     public String getNotes() {
         return mNotes;
     }
