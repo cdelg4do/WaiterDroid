@@ -113,7 +113,7 @@ public class TableOrdersFragment extends Fragment {
         FloatingActionButton btnAddOrder = (FloatingActionButton) rootView.findViewById(R.id.btnAddOrder);
 
         // Adapter to load the table list into the view
-        OrderListAdapter adapter = new OrderListAdapter(getActivity(),orderList);
+        OrderListAdapter adapter = new OrderListAdapter(getActivity(), orderList, R.drawable.ic_brokenimage);
 
         // Assign the adapter to the list
         list.setAdapter(adapter);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
 import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskListener;
 import com.cdelg4do.waiterdroid.backgroundtasks.DownLoadImageTask;
+import com.cdelg4do.waiterdroid.model.Allergen;
 import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
@@ -23,28 +25,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-// This class is the adapter needed by a ListView to represent the list of orders for a table.
+// This class is the adapter needed by a GridView to represent the allergens of a dish.
 // ----------------------------------------------------------------------------
 
-public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListener {
-
-    // Class attributes
-    private final static int rowlayout = R.layout.row_order;
-    private final static int rowlayout_empty = R.layout.row_order_empty;
-
+public class AllergenGridAdapter extends BaseAdapter implements BackgroundTaskListener {
 
     // Object attributes
-    private final ArrayList<Order> orderList;
-    private final int brokenImageResource;
-    private LayoutInflater inflater;
+    private Context context;
+    private final ArrayList<Allergen> allergenList;
+    private int brokenImageResource;
 
 
     // Class constructor
-    public OrderListAdapter(Context context, ArrayList<Order> orderList, int brokenImageResource) {
+    public AllergenGridAdapter(Context context, ArrayList<Allergen> allergenList, int brokenImageResource) {
 
-        this.orderList = orderList;
+        this.context = context;
+        this.allergenList = allergenList;
         this.brokenImageResource = brokenImageResource;
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
 
@@ -57,15 +54,15 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
         if ( modelIsEmpty() )
             return 1;
 
-        return orderList.size();
+        return allergenList.size();
     }
 
     // Gets the order at a given position
     @Override
-    public Order getItem(int pos)
+    public Allergen getItem(int pos)
     {
         if ( !modelIsEmpty() )
-            return orderList.get(pos);
+            return allergenList.get(pos);
 
         return null;
     }
@@ -79,7 +76,7 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
         return ( !modelIsEmpty() );
     }
 
-    // Gets the order id at a given position (not used)
+    // Gets the allergen id at a given position (not used)
     @Override
     public long getItemId(int pos)
     {
@@ -90,49 +87,23 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
     @Override
     public View getView(int pos, View convertView, ViewGroup parent) {
 
-        // If there are no orders to list, just show a row with an informative text
-        if ( modelIsEmpty() ) {
+        ImageView imageView;
 
-            if (convertView == null)
-                convertView = inflater.inflate(rowlayout_empty, parent, false);
+        if (convertView == null) {
 
-            // Reference to UI elements
-            TextView txtNoOrders  = (TextView) convertView.findViewById(R.id.txtNoOrders);
-
-            // Tell the user the table has no orders yet
-            txtNoOrders.setText("Esta mesa no ha ordenado ningún plato aún.");
+            imageView = new ImageView(context);
+            imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setPadding(0, 0, 0, 0);
         }
-
-        // If there are orders to show in the model, construct the row view as usual
         else {
-
-            ViewHolder holder;
-
-            if (convertView == null) {
-
-                convertView = inflater.inflate(rowlayout, parent, false);
-
-                holder = new ViewHolder();
-                holder.dishImage = (ImageView) convertView.findViewById(R.id.imgDishImage);
-                holder.dishName  = (TextView) convertView.findViewById(R.id.txtDishName);
-                holder.orderNotes  = (TextView) convertView.findViewById(R.id.txtOrderNotes);
-
-                convertView.setTag(holder);
-            }
-
-            else
-                holder = (ViewHolder) convertView.getTag();
-
-            // Sync the view with the order data
-            holder.dishName.setText( orderList.get(pos).getDishName() );
-            holder.orderNotes.setText( orderList.get(pos).getNotes() );
-
-            // Attempt to download the order image in background
-            Utils.downloadImageInBackground(orderList.get(pos).getDish().imageUrl, holder.dishImage, this);
+            imageView = (ImageView) convertView;
         }
 
+        // Attempt to download the allergen image in background
+        Utils.downloadImageInBackground(allergenList.get(pos).imageUrl, imageView, this);
 
-        return convertView;
+        return imageView;
     }
 
 
@@ -153,7 +124,7 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
     // Determines if the data model for the adapter has no items
     private boolean modelIsEmpty() {
 
-        if ( orderList != null && orderList.size() > 0)
+        if ( allergenList != null && allergenList.size() > 0)
             return false;
 
         return true;

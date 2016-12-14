@@ -32,7 +32,6 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
     // Object attributes:
-    //private RestaurantManager restaurantMgr;
     private URL serviceUrl;
     private boolean isCancelled;
 

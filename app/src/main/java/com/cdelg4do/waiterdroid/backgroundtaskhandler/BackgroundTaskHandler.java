@@ -102,7 +102,7 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
             mProgress.dismiss();
 
         if ( mListener != null )
-            mListener.onBackgroundTaskFinshed(this);
+            mListener.onBackgroundTaskFinished(this);
     }
 
     // What to do on the UI thread if the background operation was cancelled
@@ -120,7 +120,7 @@ public class BackgroundTaskHandler extends AsyncTask<Void,Integer,Boolean> {
             mProgress.dismiss();
 
         if ( mListener != null )
-            mListener.onBackgroundTaskFinshed(this);
+            mListener.onBackgroundTaskFinished(this);
     }
 
 

@@ -5,9 +5,9 @@
              android:layout_height="wrap_content">
 
     <ImageView
-        app:srcCompat="@android:drawable/ic_notification_clear_all"
         android:id="@+id/imgAllergen"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_gravity="center_vertical|center_horizontal"/>
+        android:layout_gravity="center_vertical|center_horizontal"
+        app:srcCompat="@drawable/ic_defaultplaceholder"/>
 </FrameLayout>

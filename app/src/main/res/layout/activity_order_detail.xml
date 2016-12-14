@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -18,7 +19,8 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/layoutButtons">
+            android:layout_above="@+id/layoutButtons"
+            android:id="@+id/scrollView">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,14 +44,14 @@
 
                 <ImageView
                     android:id="@+id/imgDishImage"
-                    android:src="@android:drawable/ic_notification_clear_all"
                     android:layout_height="225dp"
                     android:layout_width="225dp"
                     android:background="@android:color/white"
                     android:scaleType="fitXY"
                     android:adjustViewBounds="false"
                     android:isScrollContainer="false"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@drawable/ic_defaultplaceholder"/>
 
                 <TextView
                     android:text="Dish Description"

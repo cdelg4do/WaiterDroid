@@ -9,28 +9,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cdelg4do.waiterdroid.R;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskListener;
+import com.cdelg4do.waiterdroid.backgroundtasks.DownLoadImageTask;
 import com.cdelg4do.waiterdroid.model.Allergen;
+import com.cdelg4do.waiterdroid.utils.Utils;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 
 // This class is the adapter needed by a ListView to represent the list of allergens of a dish.
 // ----------------------------------------------------------------------------
 
-public class AllergenListAdapter extends BaseAdapter {
+public class AllergenListAdapter extends BaseAdapter implements BackgroundTaskListener {
 
     // Class attributes
     private final static int rowlayout = R.layout.row_allergen;
 
     // Object attributes
     private final ArrayList<Allergen> allergenList;
+    private final int brokenImageResource;
     private LayoutInflater inflater;
 
 
     // Class constructor
-    public AllergenListAdapter(Context context, ArrayList<Allergen> allergenList) {
+    public AllergenListAdapter(Context context, ArrayList<Allergen> allergenList,  int brokenImageResource) {
 
         this.allergenList = allergenList;
+        this.brokenImageResource = brokenImageResource;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -77,9 +84,23 @@ public class AllergenListAdapter extends BaseAdapter {
 
         // Sync the view with the allergen list data
         allergenName.setText( allergenList.get(pos).name );
-        // allergenImage.setImageBitmap(...);
+
+        // Attempt to download the allergen image in background
+        Utils.downloadImageInBackground(allergenList.get(pos).imageUrl, allergenImage, this);
 
         return convertView;
+    }
+
+
+    // Methods inherited from the BackgroundTaskListener interface:
+
+    public void onBackgroundTaskFinished(BackgroundTaskHandler taskHandler) {
+
+        // Determine if the task was the load of the dish image
+        if ( taskHandler.getTaskId() == DownLoadImageTask.taskId ) {
+
+            Utils.showDownloadedImage(taskHandler,brokenImageResource);
+        }
     }
 
 }

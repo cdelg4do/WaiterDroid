@@ -33,9 +33,8 @@
                     android:id="@+id/imgDish"
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    app:srcCompat="@android:drawable/ic_notification_clear_all"
                     android:layout_gravity="center_horizontal"
-                    />
+                    app:srcCompat="@drawable/ic_defaultplaceholder"/>
 
                 <TextView
                     android:id="@+id/txtDish"
@@ -53,13 +52,14 @@
                     android:id="@+id/gridAllergens"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:columnWidth="35dp"
-                    android:numColumns="auto_fit"
+                    android:numColumns="4"
                     android:stretchMode="columnWidth"
                     android:gravity="center_horizontal|center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"/>
+                    android:layout_marginBottom="5dp"
+                    android:horizontalSpacing="10dp"
+                    android:verticalSpacing="10dp"/>
 
             </LinearLayout>
 

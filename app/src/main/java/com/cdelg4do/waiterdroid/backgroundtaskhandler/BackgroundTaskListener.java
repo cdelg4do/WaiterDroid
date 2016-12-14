@@ -6,5 +6,5 @@ package com.cdelg4do.waiterdroid.backgroundtaskhandler;
 
 public interface BackgroundTaskListener {
 
-    void onBackgroundTaskFinshed(BackgroundTaskHandler taskHandler);
+    void onBackgroundTaskFinished(BackgroundTaskHandler taskHandler);
 }

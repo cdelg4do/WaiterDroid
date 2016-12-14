@@ -117,7 +117,7 @@ public class DishListFragment extends Fragment {
         list.setItemAnimator( new DefaultItemAnimator() );
 
         // Adapter to load the dish list into the view
-        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener);
+        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener,R.drawable.ic_brokenimage);
         list.setAdapter(adapter);
 
         // Return the root view of the fragment
@@ -138,7 +138,7 @@ public class DishListFragment extends Fragment {
     // Refreshes the list view by assigning it a new adapter with an updated model
     private void syncView() {
 
-        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener);
+        DishListAdapter adapter = new DishListAdapter(getActivity(),dishList,currency,onDishSelectedListener,R.drawable.ic_brokenimage);
         list.setAdapter(adapter);
     }
 

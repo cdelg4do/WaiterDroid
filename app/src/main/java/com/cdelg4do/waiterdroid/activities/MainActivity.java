@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         new BackgroundTaskHandler(downloadDishes,this,pDialog).execute();
 
 
-        // The fragment(s) will be loaded in onBackgroundTaskFinshed(),
+        // The fragment(s) will be loaded in onBackgroundTaskFinished(),
         // if the remote data were retrieved successfully.
 
     }
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     // Methods inherited from the BackgroundTaskListener interface:
 
     // This method is called when a background task finishes
-    public void onBackgroundTaskFinshed(BackgroundTaskHandler taskHandler) {
+    public void onBackgroundTaskFinished(BackgroundTaskHandler taskHandler) {
 
         // Determine if the task was the download of the available dishes
         if ( taskHandler.getTaskId() == DownloadAvailableDishesTask.taskId ) {

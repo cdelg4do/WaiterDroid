@@ -3,17 +3,26 @@ package com.cdelg4do.waiterdroid.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cdelg4do.waiterdroid.adapters.AllergenListAdapter;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskListener;
+import com.cdelg4do.waiterdroid.backgroundtasks.DownLoadImageTask;
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
@@ -76,7 +85,7 @@ public abstract class Utils {
             min = newMin;
         }
 
-        Random rnd = new Random( new Date().getTime() );
+        Random rnd = new Random();
         int num = rnd.nextInt((max-min)+1) + min;
         return num;
     }
@@ -85,14 +94,17 @@ public abstract class Utils {
     // This method is useful when using a ListView inside an ScrollView
     // (https://kennethflynn.wordpress.com/2012/09/12/putting-android-listviews-in-scrollviews/)
     public static void setListViewHeightBasedOnChildren(ListView listView) {
+
         AllergenListAdapter listAdapter = (AllergenListAdapter) listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
             return;
         }
 
-        int totalHeight = 0;
+        int totalHeight = 75;
+
         for (int i = 0; i < listAdapter.getCount(); i++) {
+
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
@@ -130,6 +142,47 @@ public abstract class Utils {
                 res += "0";
 
         return res;
+    }
+
+
+    // Launches a new task in background to download an image
+    public static void downloadImageInBackground(URL imageUrl, ImageView imageView, BackgroundTaskListener listener) {
+
+        DownLoadImageTask downloadImage = new DownLoadImageTask(imageUrl,imageView,null);
+        new BackgroundTaskHandler(downloadImage,listener).execute();
+    }
+
+
+    // Attempts to load into a view an image previously download in background
+    public static boolean showDownloadedImage(BackgroundTaskHandler taskHandler, int defaultImageResource) {
+
+        if ( taskHandler == null || taskHandler.getTaskId() != DownLoadImageTask.taskId )
+            return false;
+
+        HashMap<String,Object> taskProduct = (HashMap<String,Object>) taskHandler.getTaskProduct();
+
+        WeakReference<ImageView> imageViewRef = (WeakReference<ImageView>) taskProduct.get(DownLoadImageTask.IMAGEVIEW_WEAKREF_KEY);
+        Bitmap bitmap = (Bitmap) taskProduct.get(DownLoadImageTask.BITMAP_KEY);
+
+        try {
+            ImageView imageView = imageViewRef.get();
+
+            if (bitmap == null || taskHandler.hasFailed() ) {
+
+                Log.d("Utils.showDownloadedImg","WARNING: The image download has failed!");
+                imageView.setImageResource(defaultImageResource);
+                return false;
+            }
+
+            imageView.setImageBitmap(bitmap);
+        }
+        catch(NullPointerException e) {
+
+            Log.d("Utils.showDownloadedImg","WARNING: NullPointerException cached!");
+            return false;
+        }
+
+        return true;
     }
 
 }

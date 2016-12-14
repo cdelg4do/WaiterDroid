@@ -11,19 +11,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.adapters.AllergenListAdapter;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
+import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskListener;
+import com.cdelg4do.waiterdroid.backgroundtasks.DownLoadImageTask;
 import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.utils.Utils;
+
+import java.net.URL;
 
 
 // This class represents the activity used the information of an order belonging to a table.
 // ----------------------------------------------------------------------------
 
-public class OrderDetailActivity extends AppCompatActivity {
+public class OrderDetailActivity extends AppCompatActivity implements BackgroundTaskListener {
 
     // Class attributes
     public static final String ORDER_POS_KEY = "orderPos";    // The order's position in the table's orders list
@@ -83,18 +89,22 @@ public class OrderDetailActivity extends AppCompatActivity {
         // Sync the view using the model's data
         txtOrderPos.setText("Orden: " + mOrderPos);
         txtDishName.setText( mOrder.getDishName() );
-        // imgDishImage
         txtDishDescription.setText( mOrder.getDishDescription() );
         txtCaptionNotes.setText("Notas adicionales:");
         txtNotes.setText( mOrder.getNotes() );
+
+        // Attempt to download the dish image in background
+        Utils.downloadImageInBackground(mOrder.getDish().imageUrl, imgDishImage, this);
 
         // If the dish contains some allergen, show the list using an adapter.
         // Otherwise, just hide the list.
         if (mOrder.getAllergens().size()>0) {
 
-            AllergenListAdapter adapter = new AllergenListAdapter(this, mOrder.getAllergens());
+            AllergenListAdapter adapter = new AllergenListAdapter(this, mOrder.getAllergens(), R.drawable.ic_brokenimage);
             listAllergens.setAdapter(adapter);
             Utils.setListViewHeightBasedOnChildren(listAllergens);
+
+            listAllergens.setEnabled(false);
         }
         else
             listAllergens.setVisibility(View.GONE);
@@ -131,5 +141,17 @@ public class OrderDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+    // Methods inherited from the BackgroundTaskListener interface:
+
+    public void onBackgroundTaskFinished(BackgroundTaskHandler taskHandler) {
+
+        // Determine if the task was the load of the dish image
+        if ( taskHandler.getTaskId() == DownLoadImageTask.taskId ) {
+
+            Utils.showDownloadedImage(taskHandler,R.drawable.ic_brokenimage);
+        }
     }
 }

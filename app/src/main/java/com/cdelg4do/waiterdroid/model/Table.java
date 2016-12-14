@@ -77,6 +77,8 @@ public class Table implements Serializable {
         return total;
     }
 
+    // Returns a HashMap<Dish,Integer> where the keys are all the dishes ordered in the table,
+    // and the values are the number of occurrences of each dish.
     public HashMap<Dish,Integer> getOrdersMap() {
 
         HashMap<Dish,Integer> hm = new HashMap();

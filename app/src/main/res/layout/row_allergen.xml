@@ -15,7 +15,6 @@
             android:background="@android:color/white"
             android:scaleType="fitXY"
             android:layout_width="35dp"
-            android:src="@android:drawable/ic_notification_clear_all"
             android:layout_height="35dp"/>
 
         <TextView
