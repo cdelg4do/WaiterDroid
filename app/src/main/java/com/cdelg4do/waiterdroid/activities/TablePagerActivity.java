@@ -55,9 +55,8 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         initialPos = getIntent().getIntExtra(INITIAL_POS_KEY,-1);
 
         if ( initialPos == -1 ) {
-            String msg = "Missing data provided by the intent!";
-            Log.d("TablePagerActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("TablePagerActivity","ERROR: Missing data provided by the intent!");
+            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 

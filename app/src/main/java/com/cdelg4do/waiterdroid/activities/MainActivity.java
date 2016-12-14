@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
         // Before loading any fragment, try to download the dishes from the server
         ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setTitle("Please wait...");
-        pDialog.setMessage("Downloading available dishes");
+        pDialog.setTitle("Por favor espere");
+        pDialog.setMessage("Descrgando el menú del servidor...");
         pDialog.setIndeterminate(true);
         pDialog.setCancelable(false);
 
@@ -214,15 +214,14 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             // If there were problems, show error message and finish
             if ( taskHandler.hasFailed() ) {
-                String msg = "The data download has failed!";
-                Log.d("MainActivity","ERROR: " + msg);
-                Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+                Log.d("MainActivity","ERROR: The data download has failed!");
+                Utils.showMessage(this,"Ha fallado la descarga de datos, compruebe su conexión a internet y vuelva a intentarlo.",Utils.MessageType.DIALOG,"ERROR");
                 return;
             }
 
             // If everything went OK, log the data contained in the RestaurantManager
             Log.d("MainActivity",RestaurantManager.contentToString());
-            Utils.showMessage(this,"The remote data was downloaded successfully (" + RestaurantManager.dishCount() + " dishes in the menu)",Utils.MessageType.DIALOG,"INFO");
+            Utils.showMessage(this,"Datos descargados. La carta de hoy contiene " + RestaurantManager.dishCount() + " platos.",Utils.MessageType.DIALOG,"INFO");
 
 
             // Now we can proceed to load the fragment(s) contained in the activity

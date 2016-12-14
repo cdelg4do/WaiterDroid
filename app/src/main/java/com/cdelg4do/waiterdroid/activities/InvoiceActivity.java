@@ -47,9 +47,8 @@ public class InvoiceActivity extends AppCompatActivity {
         mTablePos = getIntent().getIntExtra(TABLE_POS_KEY,-1);
 
         if ( mTablePos == -1 ) {
-            String msg = "Missing data provided by the intent!";
-            Log.d("InvoiceActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("InvoiceActivity","ERROR: Missing data provided by the intent!");
+            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 
@@ -57,9 +56,8 @@ public class InvoiceActivity extends AppCompatActivity {
         mTable = RestaurantManager.getTableAtPos(mTablePos);
 
         if ( mTable == null ) {
-            String msg = "Wrong table index! (" + mTablePos + ")";
-            Log.d("InvoiceActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("InvoiceActivity","ERROR: Wrong table index! (" + mTablePos + ")");
+            Utils.showMessage(this,"Ìndice de tabla erróneo! (" + mTablePos + ")",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 
@@ -82,7 +80,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
             String msg = "This table does not have any order";
             Log.d("InvoiceActivity","INFO: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"INFO");
+            Utils.showMessage(this,"Esta mesa no ha realizado ningún pedido aún.",Utils.MessageType.DIALOG,"INFO");
             return;
         }
     }

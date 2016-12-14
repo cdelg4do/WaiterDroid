@@ -54,9 +54,8 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
         mTablePos = getIntent().getIntExtra(TABLE_POS_KEY,-1);
 
         if ( mTablePos == -1 ) {
-            String msg = "Missing data provided by the intent!";
-            Log.d("DishListActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("DishListActivity","ERROR: Missing data provided by the intent!");
+            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 
@@ -64,9 +63,8 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
         mTable = RestaurantManager.getTableAtPos(mTablePos);
 
         if ( mTable == null ) {
-            String msg = "Wrong table index! (" + mTablePos + ")";
-            Log.d("OrderDetailActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("OrderDetailActivity","ERROR: Wrong table index! (" + mTablePos + ")");
+            Utils.showMessage(this,"Ìndice de tabla erróneo! (" + mTablePos + ")",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 

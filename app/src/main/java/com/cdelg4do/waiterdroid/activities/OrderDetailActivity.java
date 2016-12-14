@@ -60,9 +60,8 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
         mTablePos = getIntent().getIntExtra(TABLE_POS_KEY,-1);
 
         if ( mOrderPos == -1 || mTablePos == -1 ) {
-            String msg = "Missing data provided by the intent!";
-            Log.d("OrderDetailActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("OrderDetailActivity","ERROR: Missing data provided by the intent!");
+            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 
@@ -71,8 +70,8 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
 
         if ( mOrder == null ) {
             String msg = "Wrong table/order indexes! (" + mTablePos + ", " + mOrderPos + ")";
-            Log.d("OrderDetailActivity","ERROR: " + msg);
-            Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"ERROR");
+            Log.d("OrderDetailActivity","ERROR: Wrong table/order indexes! (" + mTablePos + ", " + mOrderPos + ")");
+            Utils.showMessage(this,"Indice de tabla/pedido erróneo! (" + mTablePos + ", " + mOrderPos + ")",Utils.MessageType.DIALOG,"ERROR");
             return;
         }
 

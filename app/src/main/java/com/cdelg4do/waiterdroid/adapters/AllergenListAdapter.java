@@ -15,7 +15,6 @@ import com.cdelg4do.waiterdroid.backgroundtasks.DownLoadImageTask;
 import com.cdelg4do.waiterdroid.model.Allergen;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 
