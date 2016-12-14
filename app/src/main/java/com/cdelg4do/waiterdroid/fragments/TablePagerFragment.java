@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class TablePagerFragment extends Fragment {
 
     // Class attributes
-    //private static final String MODEL_KEY = "model";
     private static final String INDEX_KEY = "index";
 
     // Object attributes

@@ -1,0 +1,49 @@
+<!--
+    App string literals
+
+    Code:      es
+
+    Lang:      Spanish
+    Region:    Any
+ -->
+
+<resources>
+
+
+
+
+    <!-- Table prefix -->
+    <string name="tablePrefix">Mesa</string>
+
+    <!-- Error and info messages -->
+    <string name="error">ERROR</string>
+    <string name="info">INFO</string>
+    <string name="error_missingIntentParams">Faltan parámetros en el intent de esta actividad.</string>
+    <string name="error_wrongTableIndex">Indice de mesa erróneo!</string>
+    <string name="error_wrongTableOrderIndex">Indice de mesa/pedido erróneo!</string>
+
+    <string name="downloadMenu_progressTitle">Por favor espere</string>
+    <string name="downloadMenu_progressMsg">Descargando el menú del servidor...</string>
+    <string name="downloadMenu_errorMsg">Ha fallado la descarga de datos, compruebe su conexión a internet y vuelva a intentarlo.</string>
+    <string name="downloadMenu_successMsg_head">Datos descargados. La carta de hoy contiene</string>
+    <string name="downloadMenu_successMsg_tail">platos.</string>
+
+    <!-- Activity titles -->
+    <string name="activity_title_dishList">Seleccione un plato del menú</string>
+    <string name="activity_title_invoice">Cálculo de la cuenta</string>
+    <string name="activity_title_orderDetail">Detalles del pedido</string>
+
+    <!-- UI textLabels -->
+    <string name="txt_orderHeader">Orden:</string>
+    <string name="txt_orderNotes">Notas adicionales:</string>
+    <string name="txt_amount">Cant.</string>
+    <string name="txt_price">Precio</string>
+    <string name="txt_dish">Plato</string>
+    <string name="txt_subtotal">Subtotal</string>
+    <string name="txt_tax">IVA</string>
+    <string name="txt_total">TOTAL</string>
+    <string name="txt_tableHasNoOrders">Esta mesa no ha ordenado ningún plato aún.</string>
+    <string name="txt_noOrders">No tiene ningún pedido</string>
+    <string name="txt_orders">pedidos</string>
+
+</resources>

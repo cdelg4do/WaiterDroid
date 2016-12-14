@@ -1,5 +1,5 @@
 <!--
-    App string literals (default file)
+    App string literals
 
     Code:      en
 
@@ -9,8 +9,8 @@
 
 <resources>
 
-    <!-- Non-translatable strings -->
-    <string name="app_name" translatable="false">Waiter Droid</string>
+
+
 
     <!-- Table prefix -->
     <string name="tablePrefix">Table</string>

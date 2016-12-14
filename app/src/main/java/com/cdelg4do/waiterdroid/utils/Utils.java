@@ -21,14 +21,13 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
 
-// This class provides useful common auxiliar functions.
-// This class is abstract, and all its public methods are static.
+// This class provides useful common auxiliary functions.
+// This class is abstract, and all its methods are static.
 // ----------------------------------------------------------------------------
 
 public abstract class Utils {
@@ -153,7 +152,7 @@ public abstract class Utils {
     }
 
 
-    // Attempts to load into a view an image previously download in background
+    // Attempts to load into a view an image previously downloaded in background
     public static boolean showDownloadedImage(BackgroundTaskHandler taskHandler, int defaultImageResource) {
 
         if ( taskHandler == null || taskHandler.getTaskId() != DownLoadImageTask.taskId )

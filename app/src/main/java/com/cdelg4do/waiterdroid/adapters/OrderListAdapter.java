@@ -34,6 +34,7 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
 
 
     // Object attributes
+    private final Context context;
     private final ArrayList<Order> orderList;
     private final int brokenImageResource;
     private LayoutInflater inflater;
@@ -42,6 +43,7 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
     // Class constructor
     public OrderListAdapter(Context context, ArrayList<Order> orderList, int brokenImageResource) {
 
+        this.context = context;
         this.orderList = orderList;
         this.brokenImageResource = brokenImageResource;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,7 +102,7 @@ public class OrderListAdapter extends BaseAdapter implements BackgroundTaskListe
             TextView txtNoOrders  = (TextView) convertView.findViewById(R.id.txtNoOrders);
 
             // Tell the user the table has no orders yet
-            txtNoOrders.setText("Esta mesa no ha ordenado ningún plato aún.");
+            txtNoOrders.setText( context.getString(R.string.txt_tableHasNoOrders) );
         }
 
         // If there are orders to show in the model, construct the row view as usual

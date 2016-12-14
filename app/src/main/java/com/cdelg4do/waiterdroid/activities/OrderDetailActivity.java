@@ -26,6 +26,8 @@ import com.cdelg4do.waiterdroid.utils.Utils;
 
 import java.net.URL;
 
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+
 
 // This class represents the activity used the information of an order belonging to a table.
 // ----------------------------------------------------------------------------
@@ -61,7 +63,7 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
 
         if ( mOrderPos == -1 || mTablePos == -1 ) {
             Log.d("OrderDetailActivity","ERROR: Missing data provided by the intent!");
-            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
+            Utils.showMessage(this, getString(R.string.error_missingIntentParams), DIALOG, getString(R.string.error));
             return;
         }
 
@@ -69,9 +71,8 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
         mOrder = RestaurantManager.getOrderAtPos_InTable(mOrderPos, mTablePos);
 
         if ( mOrder == null ) {
-            String msg = "Wrong table/order indexes! (" + mTablePos + ", " + mOrderPos + ")";
             Log.d("OrderDetailActivity","ERROR: Wrong table/order indexes! (" + mTablePos + ", " + mOrderPos + ")");
-            Utils.showMessage(this,"Indice de tabla/pedido erróneo! (" + mTablePos + ", " + mOrderPos + ")",Utils.MessageType.DIALOG,"ERROR");
+            Utils.showMessage(this, getString(R.string.error_wrongTableOrderIndex) + " (" + mTablePos + ", " + mOrderPos + ")", DIALOG, getString(R.string.error));
             return;
         }
 
@@ -90,10 +91,10 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
         Button btnOk = (Button) findViewById(R.id.btnOk);
 
         // Sync the view using the model's data
-        txtOrderPos.setText("Orden: " + mOrderPos);
+        txtOrderPos.setText( getString(R.string.txt_orderHeader) + " " + mOrderPos);
         txtDishName.setText( mOrder.getDishName() );
         txtDishDescription.setText( mOrder.getDishDescription() );
-        txtCaptionNotes.setText("Notas adicionales:");
+        txtCaptionNotes.setText( getString(R.string.txt_orderNotes) );
         txtNotes.setText( mOrder.getNotes() );
 
         // Attempt to download the dish image in background

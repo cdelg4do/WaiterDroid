@@ -20,6 +20,8 @@ import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+
 
 // This class represents the main activity of the app, used to represent either the table list
 // or both the table list and the table detail view (depending on the device screen and orientation).
@@ -60,12 +62,14 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
         // Before loading any fragment, try to download the dishes from the server
         ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setTitle("Por favor espere");
-        pDialog.setMessage("Descrgando el menú del servidor...");
+        pDialog.setTitle( getString(R.string.downloadMenu_progressTitle) );
+        pDialog.setMessage( getString(R.string.downloadMenu_progressMsg) );
         pDialog.setIndeterminate(true);
         pDialog.setCancelable(false);
 
-        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask("http://www.mocky.io/v2/5848fa091100002e11590b72");
+        String urlString = "http://www.mocky.io/v2/5848fa091100002e11590b72";
+        String tablePrefix = getString(R.string.tablePrefix);
+        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask(urlString,tablePrefix);
 
         new BackgroundTaskHandler(downloadDishes,this,pDialog).execute();
 
@@ -215,13 +219,13 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
             // If there were problems, show error message and finish
             if ( taskHandler.hasFailed() ) {
                 Log.d("MainActivity","ERROR: The data download has failed!");
-                Utils.showMessage(this,"Ha fallado la descarga de datos, compruebe su conexión a internet y vuelva a intentarlo.",Utils.MessageType.DIALOG,"ERROR");
+                Utils.showMessage(this, getString(R.string.downloadMenu_errorMsg), DIALOG, getString(R.string.error));
                 return;
             }
 
             // If everything went OK, log the data contained in the RestaurantManager
             Log.d("MainActivity",RestaurantManager.contentToString());
-            Utils.showMessage(this,"Datos descargados. La carta de hoy contiene " + RestaurantManager.dishCount() + " platos.",Utils.MessageType.DIALOG,"INFO");
+            Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), DIALOG, getString(R.string.info));
 
 
             // Now we can proceed to load the fragment(s) contained in the activity

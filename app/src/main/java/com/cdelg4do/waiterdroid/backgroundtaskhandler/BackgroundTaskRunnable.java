@@ -1,7 +1,8 @@
 package com.cdelg4do.waiterdroid.backgroundtaskhandler;
 
 
-// All classes to be executed by a background task must implement this.
+// All classes to be executed by a background task must implement this interface.
+// BackgroundTaskRunnable objects are meant to be Context-independent and not to interact with user.
 // ----------------------------------------------------------------------------
 
 public interface BackgroundTaskRunnable {

@@ -22,6 +22,7 @@ public class TableListAdapter extends BaseAdapter {
     private final static int rowlayout = R.layout.row_table;
 
     // Object attributes
+    private final Context context;
     private final ArrayList<Table> tableList;
     private LayoutInflater inflater;
 
@@ -29,6 +30,7 @@ public class TableListAdapter extends BaseAdapter {
     // Class constructor
     public TableListAdapter(Context context, ArrayList<Table> tableList) {
 
+        this.context = context;
         this.tableList = tableList;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -73,9 +75,9 @@ public class TableListAdapter extends BaseAdapter {
 
         int orderCount = tableList.get(pos).orderCount();
         if (orderCount == 0)
-            tableDetail.setText("No tiene ningún pedido");
+            tableDetail.setText( context.getString(R.string.txt_noOrders) );
         else
-            tableDetail.setText(orderCount + " pedidos");
+            tableDetail.setText(orderCount + " " + context.getString(R.string.txt_orders) );
 
 
         return convertView;

@@ -20,6 +20,8 @@ import com.cdelg4do.waiterdroid.utils.Utils;
 
 import java.util.ArrayList;
 
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+
 
 // This class represents the activity where the user can order a dish from all the available dishes.
 //
@@ -55,7 +57,7 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
 
         if ( mTablePos == -1 ) {
             Log.d("DishListActivity","ERROR: Missing data provided by the intent!");
-            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
+            Utils.showMessage(this, getString(R.string.error_missingIntentParams), DIALOG, getString(R.string.error));
             return;
         }
 
@@ -64,12 +66,12 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
 
         if ( mTable == null ) {
             Log.d("OrderDetailActivity","ERROR: Wrong table index! (" + mTablePos + ")");
-            Utils.showMessage(this,"Ìndice de tabla erróneo! (" + mTablePos + ")",Utils.MessageType.DIALOG,"ERROR");
+            Utils.showMessage(this, getString(R.string.error_wrongTableIndex) + " (" + mTablePos + ")", DIALOG, getString(R.string.error));
             return;
         }
 
         // Action bar title
-        setTitle("Seleccione un plato del menú");
+        setTitle( getString(R.string.activity_title_dishList) );
 
 
         // Load the dish list fragment

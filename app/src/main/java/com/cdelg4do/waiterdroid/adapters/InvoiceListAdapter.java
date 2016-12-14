@@ -32,6 +32,7 @@ public class InvoiceListAdapter extends BaseAdapter {
     private final static int itemlayout = R.layout.row_invoice_item;
 
     // Object attributes
+    private Context context;
     private final HashMap<Dish,Integer> tableMap;
     private final String tableName;
     private final BigDecimal priceBeforeTax;
@@ -40,13 +41,14 @@ public class InvoiceListAdapter extends BaseAdapter {
 
 
     // Class constructor
-    public InvoiceListAdapter(Context context, Table table) {
+    public InvoiceListAdapter(Context ctx, Table table) {
 
+        context = ctx;
         tableMap = table.getOrdersMap();;
         tableName = table.getName();
         priceBeforeTax = table.priceBeforeTax();
         rowCount = tableMap.size() + 2;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
 
@@ -105,9 +107,9 @@ public class InvoiceListAdapter extends BaseAdapter {
             // Sync view
             txtTableName.setText(tableName);
             txtInvoiceDate.setText( new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime()) );
-            txtDishCountHeader.setText("Cant.");
-            txtDishPriceHeader.setText("Precio");
-            txtDishNameHeader.setText("Pedido");
+            txtDishCountHeader.setText( context.getString(R.string.txt_amount) );
+            txtDishPriceHeader.setText( context.getString(R.string.txt_price) );
+            txtDishNameHeader.setText( context.getString(R.string.txt_dish) );
         }
 
         // Footer
@@ -138,12 +140,12 @@ public class InvoiceListAdapter extends BaseAdapter {
             String txtPriceAfter = Utils.getMoneyString(priceAfter, RestaurantManager.getCurrency());
 
             // Sync view
-            txtSubtotal.setText("Subtotal");
+            txtSubtotal.setText( context.getString(R.string.txt_subtotal) );
             txtSubtotalPrice.setText(txtPriceBefore);
-            txtTax.setText("IVA");
+            txtTax.setText( context.getString(R.string.txt_tax) );
             txtTaxPercentage.setText(txtTaxPercent);
             txtTaxPrice.setText(txtTaxAmount);
-            txtTotal.setText("TOTAL");
+            txtTotal.setText( context.getString(R.string.txt_total) );
             txtTotalPrice.setText(txtPriceAfter);
         }
 

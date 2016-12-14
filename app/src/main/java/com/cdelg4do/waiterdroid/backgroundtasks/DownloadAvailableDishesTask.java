@@ -33,15 +33,17 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
     // Object attributes:
     private URL serviceUrl;
+    private String tablePrefix;
     private boolean isCancelled;
 
 
     // Constructor:
-    public DownloadAvailableDishesTask(String stringUrl) {
+    public DownloadAvailableDishesTask(String stringUrl, String tablePrefix) {
 
         try                             {   serviceUrl = new URL(stringUrl);   }
         catch (MalformedURLException e) {   serviceUrl = null;                 }
 
+        this.tablePrefix = tablePrefix;
         isCancelled = false;
     }
 
@@ -128,7 +130,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
             // Now we can initialize the RestaurantManager and populate it
-            RestaurantManager.newInstance(date,currency,taxRate,tableCount,"Mesa");
+            RestaurantManager.newInstance(date,currency,taxRate,tableCount,tablePrefix);
 
 
             // List of available allergens

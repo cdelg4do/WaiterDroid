@@ -15,6 +15,8 @@ import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+
 
 // This class represents the activity used to represent & navigate through the order list of all tables.
 //
@@ -56,7 +58,7 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
 
         if ( initialPos == -1 ) {
             Log.d("TablePagerActivity","ERROR: Missing data provided by the intent!");
-            Utils.showMessage(this,"Faltan parámetros en el intent de esta actividad.",Utils.MessageType.DIALOG,"ERROR");
+            Utils.showMessage(this, getString(R.string.error_missingIntentParams), DIALOG, getString(R.string.error));
             return;
         }
 
