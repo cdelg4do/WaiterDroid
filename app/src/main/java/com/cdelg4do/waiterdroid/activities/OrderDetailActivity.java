@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,6 +76,9 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
             return;
         }
 
+        // Action bar title
+        setTitle("Detalles del pedido");
+
         // Reference to UI elements
         TextView txtOrderPos = (TextView) findViewById(R.id.txtOrderPos);
         TextView txtDishName = (TextView) findViewById(R.id.txtDishName);
@@ -141,6 +145,18 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean superValue = super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return superValue;
     }
 
 

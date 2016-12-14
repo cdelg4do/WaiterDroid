@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -62,6 +63,9 @@ public class InvoiceActivity extends AppCompatActivity {
             return;
         }
 
+        // Action bar title
+        setTitle("Cálculo de la cuenta");
+
         // Reference to UI elements
         ListView invoiceList = (ListView) findViewById(R.id.invoiceList);
 
@@ -81,5 +85,17 @@ public class InvoiceActivity extends AppCompatActivity {
             Utils.showMessage(this,msg,Utils.MessageType.DIALOG,"INFO");
             return;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean superValue = super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return superValue;
     }
 }

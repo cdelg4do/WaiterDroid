@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.cdelg4do.waiterdroid.R;
@@ -46,8 +47,8 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
 
         // Set the toolbar as the action bar for this activity and show the 'back' button up on it
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get the data from the intent passed by the previous activity
         mTablePos = getIntent().getIntExtra(TABLE_POS_KEY,-1);
@@ -69,6 +70,9 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
             return;
         }
 
+        // Action bar title
+        setTitle("Seleccione un plato del menú");
+
 
         // Load the dish list fragment
 
@@ -87,6 +91,18 @@ public class DishListActivity extends AppCompatActivity implements DishListFragm
                     .add(R.id.fragment_dish_list,fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean superValue = super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return superValue;
     }
 
 

@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -17,18 +18,28 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.TablePagerActivity"
             android:configChanges="orientation|screenSize">
         </activity>
+
         <activity
             android:name=".activities.OrderDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+
+        <activity
+            android:name=".activities.DishListActivity"
             android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".activities.DishListActivity">
+
+        <activity
+            android:name=".activities.InvoiceActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".activities.InvoiceActivity">
-        </activity>
+
     </application>
 
 </manifest>
