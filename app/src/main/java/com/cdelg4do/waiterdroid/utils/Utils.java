@@ -148,7 +148,7 @@ public abstract class Utils {
     // Launches a new task in background to download an image
     public static void downloadImageInBackground(URL imageUrl, ImageView imageView, BackgroundTaskListener listener) {
 
-        DownLoadImageTask downloadImage = new DownLoadImageTask(imageUrl,imageView,null);
+        DownLoadImageTask downloadImage = new DownLoadImageTask(imageUrl, imageView, ImageCache.getCache());
         new BackgroundTaskHandler(downloadImage,listener).execute();
     }
 
