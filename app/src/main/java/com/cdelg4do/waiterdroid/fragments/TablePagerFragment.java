@@ -229,6 +229,8 @@ public class TablePagerFragment extends Fragment {
                             .show();
                 }
             }
+
+            return true;
         }
 
         return superReturn;

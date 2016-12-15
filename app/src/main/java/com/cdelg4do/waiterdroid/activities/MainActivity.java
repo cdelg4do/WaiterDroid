@@ -1,14 +1,21 @@
 package com.cdelg4do.waiterdroid.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskHandler;
@@ -42,6 +49,13 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     private static final int REQUEST_EDIT_ORDER = 1;
     private static final int REQUEST_ADD_ORDER = 2;
     private static final int REQUEST_SHOW_PAGER = 3;
+    private static final int REQUEST_SHOW_SETTINGS = 4;
+
+    // Object attributes
+    private String PREFS_SERVER_URL_KEY;
+    private String PREFS_RANDOM_DATA_KEY;
+    private String DEFAULT_SERVER_URL;
+
 
     // Methods inherited from AppCompatActivity:
 
@@ -49,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // String constants
+        PREFS_SERVER_URL_KEY = getString(R.string.prefs_urlKey);
+        PREFS_RANDOM_DATA_KEY = getString(R.string.prefs_randomDataKey);
+        DEFAULT_SERVER_URL = getString(R.string.default_url);
 
         // Reference to the UI elements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -61,23 +80,36 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         if ( RestaurantManager.isSingletonReady() )
             return;
 
-        // Before loading any fragment, try to download the dishes from the server
-        ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setTitle( getString(R.string.downloadMenu_progressTitle) );
-        pDialog.setMessage( getString(R.string.downloadMenu_progressMsg) );
-        pDialog.setIndeterminate(true);
-        pDialog.setCancelable(false);
-
-        String urlString = "http://www.mocky.io/v2/5848fa091100002e11590b72";
-        String tablePrefix = getString(R.string.tablePrefix);
-        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask(urlString,tablePrefix);
-
-        new BackgroundTaskHandler(downloadDishes,this,pDialog).execute();
+        // Attempt to download menu data from the server
+        startDataDownloadInBackground();
 
 
-        // The fragment(s) will be loaded in onBackgroundTaskFinished(),
-        // if the remote data were retrieved successfully.
+        // If the download succeeds, the fragment(s) of this activity
+        // will be loaded in onBackgroundTaskFinished().
+    }
 
+    // Action bar menu options
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_main, menu);
+        return true;
+    }
+
+    // What to do when an action bar menu option is selected
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean superReturn = super.onOptionsItemSelected(item);
+
+        // Go to the settings page
+        if (item.getItemId() == R.id.menu_settings) {
+
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, REQUEST_SHOW_SETTINGS);
+            return true;
+        }
+
+        return superReturn;
     }
 
     // This method is called when another activity called with startActivityForResult() sends response back
@@ -149,6 +181,13 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             }
         }
+
+        // If coming back from the Settings Activity
+        if (requestCode == REQUEST_SHOW_SETTINGS) {
+
+            if (resultCode == Activity.RESULT_OK)
+                Utils.showMessage(this, getString(R.string.msg_savedSettings), SNACK, null);
+        }
     }
 
 
@@ -177,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
             //startActivity(intent);
             startActivityForResult(intent, REQUEST_SHOW_PAGER);
         }
-
     }
 
 
@@ -226,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             // If everything went OK, log the data contained in the RestaurantManager
             Log.d("MainActivity",RestaurantManager.contentToString());
-            //Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), DIALOG, getString(R.string.info));
             Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), SNACK, null);
 
 
@@ -238,13 +275,31 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
     // Auxiliary methods:
 
+    // Launches a background task to download the menu data from the server
+    public void startDataDownloadInBackground() {
+
+        ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setTitle( getString(R.string.downloadMenu_progressTitle) );
+        pDialog.setMessage( getString(R.string.downloadMenu_progressMsg) );
+        pDialog.setIndeterminate(true);
+        pDialog.setCancelable(false);
+
+        String tablePrefix = getString(R.string.tablePrefix);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String urlString = prefs.getString(PREFS_SERVER_URL_KEY, DEFAULT_SERVER_URL);
+        boolean randomData =  prefs.getBoolean(PREFS_RANDOM_DATA_KEY, false);
+
+        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask(urlString,tablePrefix,randomData);
+        new BackgroundTaskHandler(downloadDishes,this,pDialog).execute();
+    }
+
     // This method is called to manually load the fragments of the activity
     private void loadActivityFragments() {
 
         // In case this method was called before loading the remote data, do nothing
         if ( !RestaurantManager.isSingletonReady() )
             return;
-
 
         FragmentManager fm = getFragmentManager();
 
@@ -253,28 +308,36 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             // We need to add the fragment only if the activity does not have it yet
             // (if the activity was recreated in the past, it might have the fragment already).
-            if ( fm.findFragmentById(R.id.fragment_table_list) == null ) {
+            TableListFragment tableListFragment = (TableListFragment) fm.findFragmentById(R.id.fragment_table_list);
 
-                TableListFragment tableListFragment = TableListFragment.newInstance( RestaurantManager.getTables() );
+            if ( tableListFragment == null ) {
+
+                tableListFragment = TableListFragment.newInstance( RestaurantManager.getTables() );
 
                 fm.beginTransaction()
                         .add(R.id.fragment_table_list,tableListFragment)
                         .commit();
             }
+            else
+                tableListFragment.syncView();
         }
 
         // Make sure there is space for the TablePager
         // (only when we are on a big screen and orientation is landscape)
         if (findViewById(R.id.fragment_table_pager) != null) {
 
-            if (fm.findFragmentById(R.id.fragment_table_pager) == null) {
+            TablePagerFragment tablePagerFragment = (TablePagerFragment) fm.findFragmentById(R.id.fragment_table_pager);
 
-                TablePagerFragment tablePagerFragment = TablePagerFragment.newInstance(0);
+            if ( tablePagerFragment == null) {
+
+                tablePagerFragment = TablePagerFragment.newInstance(0);
 
                 fm.beginTransaction()
                         .add(R.id.fragment_table_pager, tablePagerFragment)
                         .commit();
             }
+            else
+                tablePagerFragment.syncView(0);
         }
     }
 }

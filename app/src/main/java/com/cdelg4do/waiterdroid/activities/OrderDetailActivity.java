@@ -29,7 +29,7 @@ import java.net.URL;
 import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
 
 
-// This class represents the activity used the information of an order belonging to a table.
+// This class represents the activity that shows the detail of an order belonging to a table.
 // ----------------------------------------------------------------------------
 
 public class OrderDetailActivity extends AppCompatActivity implements BackgroundTaskListener {
@@ -77,7 +77,7 @@ public class OrderDetailActivity extends AppCompatActivity implements Background
         }
 
         // Action bar title
-        setTitle("Detalles del pedido");
+        setTitle( getString(R.string.activity_title_orderDetail) );
 
         // Reference to UI elements
         TextView txtOrderPos = (TextView) findViewById(R.id.txtOrderPos);

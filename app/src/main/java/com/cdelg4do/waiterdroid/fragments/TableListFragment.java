@@ -2,21 +2,34 @@ package com.cdelg4do.waiterdroid.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.cdelg4do.waiterdroid.R;
+import com.cdelg4do.waiterdroid.activities.InvoiceActivity;
+import com.cdelg4do.waiterdroid.activities.MainActivity;
+import com.cdelg4do.waiterdroid.activities.SettingsActivity;
 import com.cdelg4do.waiterdroid.adapters.TableListAdapter;
+import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
+import com.cdelg4do.waiterdroid.utils.Utils;
 
 import java.util.ArrayList;
+
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.SNACK;
 
 
 // This class represents the fragment showing the list of existing tables.
@@ -156,7 +169,7 @@ public class TableListFragment extends Fragment {
     }
 
 
-    // Auxliliar methods:
+    // Auxiliary methods:
 
     // Syncs the view by assigning it a new adapter with an updated table list
     public void syncView() {

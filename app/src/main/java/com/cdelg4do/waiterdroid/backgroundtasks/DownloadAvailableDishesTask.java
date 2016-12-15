@@ -34,16 +34,19 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
     // Object attributes:
     private URL serviceUrl;
     private String tablePrefix;
+    private boolean randomOrders;
+
     private boolean isCancelled;
 
 
     // Constructor:
-    public DownloadAvailableDishesTask(String stringUrl, String tablePrefix) {
+    public DownloadAvailableDishesTask(String stringUrl, String tablePrefix, boolean randomOrders) {
 
         try                             {   serviceUrl = new URL(stringUrl);   }
         catch (MalformedURLException e) {   serviceUrl = null;                 }
 
         this.tablePrefix = tablePrefix;
+        this.randomOrders = randomOrders;
         isCancelled = false;
     }
 
@@ -203,7 +206,8 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
         // Now that all JSON data should be stored in the RestaurantManager,
         // we can generate some random orders for testing
-        RestaurantManager.generateRandomOrders();
+        if (randomOrders)
+            RestaurantManager.generateRandomOrders();
 
 
         // If we made it till here, the operation was completed successfully
