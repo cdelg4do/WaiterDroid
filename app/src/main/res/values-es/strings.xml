@@ -18,6 +18,8 @@
     <!-- Error and info messages -->
     <string name="error">ERROR</string>
     <string name="info">INFO</string>
+    <string name="undo">Deshacer</string>
+
     <string name="error_missingIntentParams">Faltan parámetros en el intent de esta actividad.</string>
     <string name="error_wrongTableIndex">Indice de mesa erróneo!</string>
     <string name="error_wrongTableOrderIndex">Indice de mesa/pedido erróneo!</string>
@@ -28,10 +30,18 @@
     <string name="downloadMenu_successMsg_head">Datos descargados. La carta de hoy contiene</string>
     <string name="downloadMenu_successMsg_tail">platos.</string>
 
+    <string name="msg_tableEmptied">Se ha vaciado la mesa.</string>
+
     <!-- Activity titles -->
     <string name="activity_title_dishList">Seleccione un plato del menú</string>
     <string name="activity_title_invoice">Cálculo de la cuenta</string>
     <string name="activity_title_orderDetail">Detalles del pedido</string>
+
+    <!-- Menu options -->
+    <string name="menu_txt_previousPage">Anterior</string>
+    <string name="menu_txt_nextPage">Siguiente</string>
+    <string name="menu_txt_calculateInvoice">Calcular la cuenta</string>
+    <string name="menu_txt_emptyTable">Vaciar la mesa</string>
 
     <!-- UI textLabels -->
     <string name="txt_orderHeader">Orden:</string>

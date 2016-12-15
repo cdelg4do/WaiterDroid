@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.activities.InvoiceActivity;
 import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
+import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
 
@@ -126,7 +128,7 @@ public class TablePagerFragment extends Fragment {
         return rootView;
     }
 
-    // Action bar menu
+    // Action bar menu options
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -134,16 +136,54 @@ public class TablePagerFragment extends Fragment {
         inflater.inflate(R.menu.menu_fragment_tablepager, menu);
     }
 
+    // Enable/disable the previous & next menu items right before every time the menu is shown
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem menuPrev = menu.findItem(R.id.menu_previousPage);
+        MenuItem menuNext = menu.findItem(R.id.menu_nextPage);
+
+        if (viewPager.getCurrentItem() > 0) {
+            menuPrev.setEnabled(true);
+            menuPrev.setIcon( getResources().getDrawable(R.drawable.ic_arrowleft) );
+        }
+        else {
+            menuPrev.setEnabled(false);
+            menuPrev.setIcon( getResources().getDrawable(R.drawable.ic_arrowleft_disabled) );
+        }
+
+        if (viewPager.getCurrentItem() < tableList.size() - 1) {
+            menuNext.setEnabled(true);
+            menuNext.setIcon( getResources().getDrawable(R.drawable.ic_arrowright) );
+        }
+        else {
+            menuNext.setEnabled(false);
+            menuNext.setIcon( getResources().getDrawable(R.drawable.ic_arrowright_disabled) );
+        }
+    }
+
     // What to do when a menu option is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean superReturn = super.onOptionsItemSelected(item);
 
-        // Current table position in the pager
-        int currentTablePos = viewPager.getCurrentItem();
+        final int currentTablePos = viewPager.getCurrentItem();
+
+        // Move to the previous table
+        if (item.getItemId() == R.id.menu_previousPage) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+            return true;
+        }
+
+        // Move to the next table
+        else if (item.getItemId() == R.id.menu_nextPage) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            return true;
+        }
 
         // Calculate the check for the current table
-        if (item.getItemId() == R.id.menu_calculateInvoice) {
+        else if (item.getItemId() == R.id.menu_calculateInvoice) {
 
             Intent intent = new Intent(getActivity(), InvoiceActivity.class);
             intent.putExtra(InvoiceActivity.TABLE_POS_KEY, currentTablePos);
@@ -152,29 +192,42 @@ public class TablePagerFragment extends Fragment {
             return true;
         }
 
-        // Clear the current table
+        // Empty the current table
         else if (item.getItemId() == R.id.menu_emptyTable) {
 
-            Table currentTable = RestaurantManager.getTableAtPos(currentTablePos);
-            if ( currentTable != null )
-                currentTable.removeAllOrders();
+            final Table currentTable = RestaurantManager.getTableAtPos(currentTablePos);
 
-            // Try to refresh the table list fragment, if it exists (it always should)
-            TableListFragment listFragment = (TableListFragment) getFragmentManager().findFragmentById(R.id.fragment_table_list);
-            if ( listFragment != null )
-                listFragment.syncView();
+            if ( currentTable != null ) {
 
-            // Try to refresh the pager fragment, if it exists
-            TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
-            if ( pagerFragment != null )
-                pagerFragment.syncView(currentTablePos);
+                // Reset the table orders, but keep a copy of the old list
+                final ArrayList<Order> oldList = currentTable.resetTable();
+
+                syncFragmentsView(currentTablePos);
+
+                if (getView() != null) {
+
+                    Snackbar.make(getView(), getString(R.string.msg_tableEmptied), Snackbar.LENGTH_LONG)
+                            .setAction(R.string.undo, new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+
+                                    if (currentTable != null && oldList != null)
+                                        currentTable.restoreTable(oldList);
+
+                                    syncFragmentsView(currentTablePos);
+                                }
+                            })
+                            .show();
+                }
+            }
         }
 
         return superReturn;
     }
 
 
-    // Auxiliar methods:
+    // Auxiliary methods:
 
     // Gives a title to the action bar of the activity containing this fragment
     // (works only if the container activity inherits from AppCompatActivity and has an action bar)
@@ -189,7 +242,7 @@ public class TablePagerFragment extends Fragment {
         }
     }
 
-    // Updates the pager with the table in a given position
+    // Moves the pager to the table in a given position
     public void moveToPosition(int position) {
         viewPager.setCurrentItem(position);
     }
@@ -205,5 +258,20 @@ public class TablePagerFragment extends Fragment {
 
         moveToPosition(tablePos);
     }
+
+    // Syncs the views of the pagerFragment and the listFragment (if exist) with the current data model
+    private void syncFragmentsView(int tablePos) {
+
+        // Try to refresh the table list fragment, if it exists
+        TableListFragment listFragment = (TableListFragment) getFragmentManager().findFragmentById(R.id.fragment_table_list);
+        if (listFragment != null)
+            listFragment.syncView();
+
+        // Try to refresh the pager fragment, if it exists
+        TablePagerFragment pagerFragment = (TablePagerFragment) getFragmentManager().findFragmentById(R.id.fragment_table_pager);
+        if (pagerFragment != null)
+            pagerFragment.syncView(tablePos);
+    }
+
 
 }

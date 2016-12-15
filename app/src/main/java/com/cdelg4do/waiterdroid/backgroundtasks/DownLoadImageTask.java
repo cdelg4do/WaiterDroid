@@ -35,19 +35,30 @@ public class DownLoadImageTask implements BackgroundTaskRunnable {
 
     private URL imageUrl;
     private Map cache;
+    private int maxSize;
     private final WeakReference<ImageView> imageViewWeakRef;
     private Bitmap bitmap;
 
 
-    // Constructor:
-    public DownLoadImageTask(URL url, ImageView img, Map<String,Bitmap> existingCache) {
+    // Constructors:
+
+    // Specifies a maximum size to resize the downloaded image
+    // (if max < 1, no resizing will happen)
+    public DownLoadImageTask(URL url, ImageView img, Map<String,Bitmap> existingCache, int max) {
 
         imageUrl = url;
-        cache = existingCache;
         imageViewWeakRef = new WeakReference<ImageView>(img);
+        cache = existingCache;
+        maxSize = max;
         bitmap = null;
 
         isCancelled = false;
+    }
+
+    // Same as above, but with max = 0 (no rescaling)
+    public DownLoadImageTask(URL url, ImageView img, Map<String,Bitmap> existingCache) {
+
+        this(url, img, existingCache, 0);
     }
 
 
@@ -102,6 +113,9 @@ public class DownLoadImageTask implements BackgroundTaskRunnable {
                 return false;
             }
 
+            if (maxSize > 0)
+                bitmap = resizeBitmapToMax(bitmap,maxSize);
+
             if (cache != null)
                 cache.put(imageUrl.toString(), bitmap);
         }
@@ -131,6 +145,30 @@ public class DownLoadImageTask implements BackgroundTaskRunnable {
         }
 
         return inputStream;
+    }
+
+
+    // Rescales a bitmap to a given maximum dimension in px
+    // (to save memory on the device)
+    public Bitmap resizeBitmapToMax(Bitmap image, int maxSize) {
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+
+        if (bitmapRatio > 1) {
+
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        }
+        else {
+
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
 }

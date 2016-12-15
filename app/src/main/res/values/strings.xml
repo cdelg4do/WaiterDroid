@@ -18,6 +18,8 @@
     <!-- Error and info messages -->
     <string name="error">ERROR</string>
     <string name="info">INFO</string>
+    <string name="undo">Undo</string>
+
     <string name="error_missingIntentParams">Missing data provided by the intent.</string>
     <string name="error_wrongTableIndex">Wrong table index!</string>
     <string name="error_wrongTableOrderIndex">Wrong table/order index!</string>
@@ -28,10 +30,18 @@
     <string name="downloadMenu_successMsg_head">"Download complete. Today's menu includes"</string>
     <string name="downloadMenu_successMsg_tail">dishes.</string>
 
+    <string name="msg_tableEmptied">The table has been reset.</string>
+
     <!-- Activity titles -->
     <string name="activity_title_dishList">Select some dish from the menu</string>
     <string name="activity_title_invoice">Invoice preview</string>
     <string name="activity_title_orderDetail">Order detail</string>
+
+    <!-- Menu options -->
+    <string name="menu_txt_previousPage">Previous</string>
+    <string name="menu_txt_nextPage">Next</string>
+    <string name="menu_txt_calculateInvoice">Calculate invoice</string>
+    <string name="menu_txt_emptyTable">Empty the table</string>
 
     <!-- UI textLabels -->
     <string name="txt_orderHeader">Order:</string>

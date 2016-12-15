@@ -62,8 +62,29 @@ public class Table implements Serializable {
         return mOrders.remove(order);
     }
 
-    public void removeAllOrders() {
+    // Resets the order list (returns a copy to the old list)
+    public ArrayList<Order> resetTable() {
+
+        ArrayList<Order> oldList = new ArrayList<Order>();
+        for (Order o: mOrders)
+            oldList.add(o);
+
         mOrders.clear();
+        return oldList;
+    }
+
+    // Assigns the given list to the table's order list (the existing list is cleared and removed)
+    // Returns false if the given list is null, otherwise returns true
+    public boolean restoreTable(ArrayList<Order> oldList) {
+
+        if (oldList==null)
+            return false;
+
+        mOrders.clear();
+        for (Order o: oldList)
+            mOrders.add(o);
+
+        return true;
     }
 
     // Gets the price for all the table orders (before taxes)

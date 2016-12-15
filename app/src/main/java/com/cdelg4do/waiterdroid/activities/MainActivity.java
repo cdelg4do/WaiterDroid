@@ -21,6 +21,7 @@ import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.SNACK;
 
 
 // This class represents the main activity of the app, used to represent either the table list
@@ -225,13 +226,13 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             // If everything went OK, log the data contained in the RestaurantManager
             Log.d("MainActivity",RestaurantManager.contentToString());
-            Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), DIALOG, getString(R.string.info));
+            //Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), DIALOG, getString(R.string.info));
+            Utils.showMessage(this, getString(R.string.downloadMenu_successMsg_head) + " " + RestaurantManager.dishCount() + " " + getString(R.string.downloadMenu_successMsg_tail), SNACK, null);
 
 
             // Now we can proceed to load the fragment(s) contained in the activity
             loadActivityFragments();
         }
-
     }
 
 
