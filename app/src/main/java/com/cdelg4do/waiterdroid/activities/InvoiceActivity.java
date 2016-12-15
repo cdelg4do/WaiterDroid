@@ -64,7 +64,7 @@ public class InvoiceActivity extends AppCompatActivity {
         }
 
         // Action bar title
-        setTitle("Cálculo de la cuenta");
+        setTitle( getString(R.string.activity_title_invoice) );
 
         // Reference to UI elements
         ListView invoiceList = (ListView) findViewById(R.id.invoiceList);

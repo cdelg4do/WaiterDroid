@@ -14,8 +14,7 @@
             android:text="*no.*"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="normal|bold"
+            android:textSize="14sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"/>
@@ -28,17 +27,16 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:textStyle="normal|bold"
-            android:textSize="24sp"
-            android:layout_margin="15dp"/>
+            android:textSize="14sp"
+            android:layout_margin="15dp"
+            android:textAlignment="textEnd"/>
 
         <TextView
             android:id="@+id/txtDishName"
             android:text="*dish name*"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="normal|bold"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:layout_alignParentTop="true"
             android:layout_margin="15dp"
             android:layout_toLeftOf="@+id/txtDishPrice"

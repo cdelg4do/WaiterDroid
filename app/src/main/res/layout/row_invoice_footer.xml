@@ -20,23 +20,24 @@
             android:text="Subtotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="normal|bold"
+            android:textSize="14sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/txtSubtotalPrice"
-            android:layout_margin="15dp"/>
+            android:layout_margin="15dp"
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:id="@+id/txtSubtotalPrice"
             android:text="*price*"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textStyle="normal|bold"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="15dp"/>
+            android:layout_margin="15dp"
+            android:textAlignment="textEnd"/>
 
     </RelativeLayout>
 
@@ -50,7 +51,7 @@
             android:text="Tax"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textStyle="normal|bold"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
@@ -61,18 +62,19 @@
             android:text="*price*"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textStyle="normal|bold"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="15dp"/>
+            android:layout_margin="15dp"
+            android:textAlignment="textEnd"/>
 
         <TextView
             android:id="@+id/txtTaxPercentage"
             android:text="*(tax %)*"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textStyle="normal|bold"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/txtTaxPrice"
@@ -97,7 +99,7 @@
             android:text="TOTAL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="normal|bold"
             android:textAlignment="center"
             android:layout_alignParentTop="true"
@@ -108,13 +110,14 @@
         <TextView
             android:id="@+id/txtTotalPrice"
             android:text="*price*"
-            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="normal|bold"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="15dp"/>
+            android:layout_margin="15dp"
+            android:textAlignment="textEnd"
+            android:layout_width="160dp"/>
 
     </RelativeLayout>
 

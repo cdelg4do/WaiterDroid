@@ -136,13 +136,15 @@ public class TablePagerFragment extends Fragment {
         inflater.inflate(R.menu.menu_fragment_tablepager, menu);
     }
 
-    // Enable/disable the previous & next menu items right before every time the menu is shown
+    // Enable/disable the menu items right before every time the menu is shown
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem menuPrev = menu.findItem(R.id.menu_previousPage);
         MenuItem menuNext = menu.findItem(R.id.menu_nextPage);
+        MenuItem menuInvoice = menu.findItem(R.id.menu_calculateInvoice);
+        MenuItem menuEmpty = menu.findItem(R.id.menu_emptyTable);
 
         if (viewPager.getCurrentItem() > 0) {
             menuPrev.setEnabled(true);
@@ -161,6 +163,12 @@ public class TablePagerFragment extends Fragment {
             menuNext.setEnabled(false);
             menuNext.setIcon( getResources().getDrawable(R.drawable.ic_arrowright_disabled) );
         }
+
+
+        Table currentTable = RestaurantManager.getTableAtPos( viewPager.getCurrentItem() );
+
+        menuInvoice.setEnabled(currentTable.getOrders().size() > 0);
+        menuEmpty.setEnabled(currentTable.getOrders().size() > 0);
     }
 
     // What to do when a menu option is clicked
