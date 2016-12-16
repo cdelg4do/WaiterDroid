@@ -57,8 +57,7 @@
                     android:layout_marginLeft="10dp"
                     android:gravity="top"
                     android:hint="@string/txt_serverUrlHint"
-                    android:layout_height="75dp"
-                    />
+                    android:layout_height="100dp"/>
 
                 <TextView
                     android:id="@+id/txtTestDataHeader"

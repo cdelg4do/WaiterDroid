@@ -27,8 +27,8 @@
     <string name="undo">Deshacer</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
-    <string name="save_settings">Guardar ajustes</string>
-    <string name="discard_changes">Descartar cambios</string>
+    <string name="save_settings">Guardar</string>
+    <string name="discard_changes">Descartar</string>
 
     <string name="error_missingIntentParams">Faltan parámetros en el intent de esta actividad.</string>
     <string name="error_wrongTableIndex">Indice de mesa erróneo!</string>
@@ -65,7 +65,7 @@
     <!-- UI textLabels -->
     <string name="txt_serverSettings">Ajustes del servidor</string>
     <string name="txt_serverUrlHeader">URL del servicio:</string>
-    <string name="txt_serverUrlHint">Si dispones de una URL alternativa, escríbela aquí. O deja el cuadro vacío para utilizar la URL por defecto.</string>
+    <string name="txt_serverUrlHint">Si dispones de una URL alternativa (ej. http://bit.ly/WaiterDroidMenu2), escríbela aquí. O deja el cuadro vacío para la URL por defecto.</string>
     <string name="txt_testDataHeader">Datos de prueba:</string>
     <string name="txt_testDataCheckbox">Generar datos de prueba aleatorios después de descargar los datos del servidor.</string>
     <string name="txt_effectiveSettings">Estos ajustes tendrán efecto la próxima vez que se descarguen los datos del servidor.</string>

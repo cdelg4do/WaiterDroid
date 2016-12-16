@@ -19,6 +19,7 @@ import com.cdelg4do.waiterdroid.model.Allergen;
 import com.cdelg4do.waiterdroid.model.Dish;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -207,6 +208,10 @@ public class DishListAdapter extends RecyclerView.Adapter<DishListAdapter.DishVi
                 else
                     populateTable(allergenTable, dish.allergens, 3);
             }
+            // If no allergens to show, remove all rows in the table
+            // (to prevent errors when recycling the view)
+            else
+                allergenTable.removeAllViewsInLayout();
 
             // Attempt to download the dish image in background
             Utils.downloadImageInBackground(dish.imageUrl, imgDish, listener);

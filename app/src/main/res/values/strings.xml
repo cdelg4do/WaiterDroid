@@ -27,8 +27,8 @@
     <string name="undo">Undo</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
-    <string name="save_settings">Save settings</string>
-    <string name="discard_changes">Discard changes</string>
+    <string name="save_settings">Save</string>
+    <string name="discard_changes">Discard</string>
 
     <string name="error_missingIntentParams">Missing data provided by the intent.</string>
     <string name="error_wrongTableIndex">Wrong table index!</string>
@@ -65,7 +65,7 @@
     <!-- UI textLabels -->
     <string name="txt_serverSettings">Server settings</string>
     <string name="txt_serverUrlHeader">Service URL:</string>
-    <string name="txt_serverUrlHint">If you have an alternate url, write here. Or leave it blank for the default url.</string>
+    <string name="txt_serverUrlHint">If you have an alternate url (e.g. http://bit.ly/WaiterDroidMenu2), write it here. Or leave it blank for the default url.</string>
     <string name="txt_testDataHeader">Test data:</string>
     <string name="txt_testDataCheckbox">Generate random test data after downloading information from the server.</string>
     <string name="txt_effectiveSettings">These settings will apply the next time you download data from the server.</string>
