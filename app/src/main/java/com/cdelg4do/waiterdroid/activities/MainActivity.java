@@ -340,4 +340,24 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
                 tablePagerFragment.syncView(0);
         }
     }
+
+    // Opposed to loadActivityFragments, manually unloads all fragments of the activity
+    private void removeActivityFragments() {
+
+        FragmentManager fm = getFragmentManager();
+
+        TableListFragment tableListFragment = (TableListFragment) fm.findFragmentById(R.id.fragment_table_list);
+        if ( tableListFragment != null ) {
+            fm.beginTransaction()
+                    .remove(tableListFragment)
+                    .commit();
+        }
+
+        TablePagerFragment tablePagerFragment = (TablePagerFragment) fm.findFragmentById(R.id.fragment_table_pager);
+        if ( tablePagerFragment != null ) {
+            fm.beginTransaction()
+                    .remove(tablePagerFragment)
+                    .commit();
+        }
+    }
 }

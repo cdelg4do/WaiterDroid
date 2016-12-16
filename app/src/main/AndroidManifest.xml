@@ -31,8 +31,7 @@
         </activity>
 
         <activity
-            android:name=".activities.DishListActivity"
-            android:configChanges="orientation|screenSize">
+            android:name=".activities.DishListActivity">
         </activity>
 
         <activity

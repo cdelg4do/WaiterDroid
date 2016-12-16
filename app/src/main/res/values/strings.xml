@@ -47,6 +47,8 @@
     <string name="msg_tableEmptied">The table has been reset.</string>
     <string name="msg_savedSettings">The settings have been saved.</string>
 
+    <string name="msg_rotateMenu">Rotate the screen to get a detailed view of each dish.</string>
+
     <!-- Activity titles -->
     <string name="activity_title_dishList">Select a dish from the menu</string>
     <string name="activity_title_invoice">Invoice preview</string>

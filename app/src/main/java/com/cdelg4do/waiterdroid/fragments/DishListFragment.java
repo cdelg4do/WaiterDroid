@@ -2,11 +2,13 @@ package com.cdelg4do.waiterdroid.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,12 @@ import android.view.ViewGroup;
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.adapters.DishListAdapter;
 import com.cdelg4do.waiterdroid.model.Dish;
+import com.cdelg4do.waiterdroid.utils.Utils;
 
 import java.util.ArrayList;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.SNACK;
 
 
 // This class represents the fragment showing the list of existing dishes.
@@ -110,8 +116,15 @@ public class DishListFragment extends Fragment {
         // Reference to UI elements
         list = (RecyclerView) rootView.findViewById(R.id.dishList);
 
-        // Set the "list" layout as a table with 2 columns
-        list.setLayoutManager( new GridLayoutManager(getActivity(),2) );
+        // In landscape, set the "list" layout as a simple list
+        if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)
+            list.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // In portrait, set the "list" layout as a table with 2 columns
+        else {
+            list.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            Utils.showMessage(getActivity(), getString(R.string.msg_rotateMenu), SNACK, null);
+        }
 
         // How to animate elements
         list.setItemAnimator( new DefaultItemAnimator() );

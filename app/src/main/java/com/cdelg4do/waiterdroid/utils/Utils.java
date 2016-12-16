@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -197,6 +199,12 @@ public abstract class Utils {
         }
 
         return true;
+    }
+
+
+    // Returns the amount of pixels corresponding to a given amount of dp (dip)
+    public static int convertDpToPixel(int dp, Context ctx) {
+        return Math.round(dp * ctx.getResources().getDisplayMetrics().density);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.cdelg4do.waiterdroid.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -128,6 +129,12 @@ public class AllergenGridAdapter extends BaseAdapter implements BackgroundTaskLi
             return false;
 
         return true;
+    }
+
+
+    // Determines if we are in landscape mode or not
+    private boolean usingLandscapeLayout() {
+        return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
     }
 
 

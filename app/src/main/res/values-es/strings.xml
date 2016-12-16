@@ -47,6 +47,8 @@
     <string name="msg_tableEmptied">Se ha vaciado la mesa.</string>
     <string name="msg_savedSettings">Se han guardado los ajustes.</string>
 
+    <string name="msg_rotateMenu">Gira la pantalla para obtener una vista detallada de cada plato.</string>
+
     <!-- Activity titles -->
     <string name="activity_title_dishList">Seleccione un plato del menú</string>
     <string name="activity_title_invoice">Cálculo de la cuenta</string>
