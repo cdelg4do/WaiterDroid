@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
+import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
@@ -22,20 +24,22 @@ import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
 //
 // Implements the following interfaces:
 //
+// - ViewPager.OnPageChangeListener: in order to do some action when the table pager view changes.
+//
 // - TableOrdersFragment.TableOrdersFragmentListener: in order to do some action when an order is selected.
 // ----------------------------------------------------------------------------
 
-public class TablePagerActivity extends AppCompatActivity implements TableOrdersFragment.TableOrdersFragmentListener {
+public class TablePagerActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TableOrdersFragment.TableOrdersFragmentListener {
 
     // Class attributes
-    public static final String INITIAL_POS_KEY = "currentPos";
+    public static final String CURRENT_POS_KEY = "currentPos";
 
     private static final int REQUEST_EDIT_ORDER = 1;
     private static final int REQUEST_ADD_ORDER = 2;
 
 
     // Object attributes
-    private int initialPos;
+    private int currentTableIndex;
 
 
     // Methods inherited from AppCompatActivity:
@@ -52,15 +56,17 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         // Get the data from the intent passed by the previous activity
-        initialPos = getIntent().getIntExtra(INITIAL_POS_KEY,-1);
+        currentTableIndex = getIntent().getIntExtra(CURRENT_POS_KEY,-1);
 
-        if ( initialPos == -1 ) {
+        if ( currentTableIndex == -1 ) {
             Log.d("TablePagerActivity","ERROR: Missing data provided by the intent!");
             Utils.showMessage(this, getString(R.string.error_missingIntentParams), DIALOG, getString(R.string.error));
             return;
         }
+
+        // Action bar title
+        setTitle( RestaurantManager.getTableAtPos(currentTableIndex).getName() );
 
 
         // Load the pager fragment
@@ -71,7 +77,7 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         // (if the activity was recreated in the past, it might have the fragment already).
         if ( fm.findFragmentById(R.id.fragment_table_pager) == null ) {
 
-            TablePagerFragment pagerFragment = TablePagerFragment.newInstance(initialPos);
+            TablePagerFragment pagerFragment = TablePagerFragment.newInstance(currentTableIndex);
 
             fm.beginTransaction()
                     .add(R.id.fragment_table_pager,pagerFragment)
@@ -84,6 +90,7 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
         boolean superValue = super.onOptionsItemSelected(item);
 
         if (item.getItemId() == android.R.id.home) {
+
             finish();
             return true;
         }
@@ -143,6 +150,28 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
     }
 
 
+    // Methods inherited from the ViewPager.OnPageChangeListener:
+
+    // When a new page is selected, update the action bar title with the new table name
+    // and save the new index position
+    @Override
+    public void onPageSelected(int position) {
+
+        setTitle( RestaurantManager.getTableAtPos(position).getName() );
+        currentTableIndex = position;
+    }
+
+    // When the current page is scrolled (by the user or programmatically), do nothing
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    // When the scroll state changes (by the user or programmatically), do nothing
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+
     // Methods inherited from the TableOrdersFragment.TableOrdersFragmentListener interface:
 
     // What to do when a row in the order list is selected
@@ -169,4 +198,5 @@ public class TablePagerActivity extends AppCompatActivity implements TableOrders
 
         startActivityForResult(intent, REQUEST_ADD_ORDER);
     }
+
 }

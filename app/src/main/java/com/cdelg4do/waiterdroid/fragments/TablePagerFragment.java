@@ -1,13 +1,12 @@
 package com.cdelg4do.waiterdroid.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.activities.InvoiceActivity;
+import com.cdelg4do.waiterdroid.activities.MainActivity;
+import com.cdelg4do.waiterdroid.activities.TablePagerActivity;
 import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
 import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
@@ -37,7 +38,7 @@ public class TablePagerFragment extends Fragment {
 
     // Object attributes
     private ArrayList<Table> tableList;  // Model for this fragment
-    private int initialTableIndex;       // Index of the initial table
+    private int initialTableIndex;       // Index of the current table
     private ViewPager viewPager;
 
 
@@ -92,37 +93,24 @@ public class TablePagerFragment extends Fragment {
         // Reference to UI elements
         viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
 
-        // Define a listener for the ViewPager
-        // (it must implement the interface ViewPager.OnPageChangeListener)
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            // When a new page is selected, update the action bar title with the new table name
-            @Override
-            public void onPageSelected(int position) {
-
-                updateActionBarTitle( tableList.get(position).getName() );
-            }
-
-            // When the current page is scrolled (by the user or programmatically), do nothing
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            // When the scroll state changes (by the user or programmatically), do nothing
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
         // Create the adapter to load the pages into the view, and assign it to the View Pager
         TablePagerAdapter adapter = new TablePagerAdapter(getFragmentManager(),tableList);
+
+        // Define the parent activity as listener for the ViewPager
+        Activity parent = getActivity();
         viewPager.setAdapter(adapter);
 
-        // Set the currently selected page to the table at the initial index
+        // Move the pager to the current table
         viewPager.setCurrentItem(initialTableIndex);
 
-        // Set the action bar title (the name of the table at the initial index)
-        updateActionBarTitle( tableList.get(initialTableIndex).getName() );
+        if ( parent instanceof MainActivity)
+            viewPager.addOnPageChangeListener( (MainActivity)parent );
+
+        else if ( parent instanceof TablePagerActivity)
+            viewPager.addOnPageChangeListener( (TablePagerActivity)parent );
+
+        // Set the action bar title (the name of the current table)
+        //updateActionBarTitle( tableList.get(initialTableIndex).getName() );
 
         // Return the root view of the fragment
         return rootView;
@@ -190,7 +178,7 @@ public class TablePagerFragment extends Fragment {
             return true;
         }
 
-        // Calculate the check for the current table
+        // Calculate the invoice for the current table
         else if (item.getItemId() == R.id.menu_calculateInvoice) {
 
             Intent intent = new Intent(getActivity(), InvoiceActivity.class);
@@ -239,22 +227,10 @@ public class TablePagerFragment extends Fragment {
 
     // Auxiliary methods:
 
-    // Gives a title to the action bar of the activity containing this fragment
-    // (works only if the container activity inherits from AppCompatActivity and has an action bar)
-    private void updateActionBarTitle(String newTitle) {
-
-        if (getActivity() instanceof AppCompatActivity) {
-
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-            if (actionBar != null)
-                actionBar.setTitle(newTitle);
-        }
-    }
-
     // Moves the pager to the table in a given position
-    public void moveToPosition(int position) {
-        viewPager.setCurrentItem(position);
+    // (used to move the pager from outside this fragment)
+    public void movePagerToPosition(int newPosition) {
+        viewPager.setCurrentItem(newPosition);
     }
 
     // Syncs the view by assigning it a new adapter with an updated table list,
@@ -266,7 +242,7 @@ public class TablePagerFragment extends Fragment {
         TablePagerAdapter adapter = new TablePagerAdapter(getFragmentManager(),tableList);
         viewPager.setAdapter(adapter);
 
-        moveToPosition(tablePos);
+        viewPager.setCurrentItem(tablePos);
     }
 
     // Syncs the views of the pagerFragment and the listFragment (if exist) with the current data model

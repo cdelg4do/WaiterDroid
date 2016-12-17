@@ -1,13 +1,12 @@
 package com.cdelg4do.waiterdroid.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -38,12 +37,14 @@ import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.SNACK;
 //
 // - BackgroundTaskListener: in order to throw tasks in background using a BackgroundTaskHandler.
 //
+// - ViewPager.OnPageChangeListener: in order to do some action when the table pager view changes.
+//
 // - TableListFragment.OnTableSelectedListener: in order to do some action when a table is selected.
 //
 // - TableOrdersFragment.TableOrdersFragmentListener: in order to do some action when an order is selected.
 // ----------------------------------------------------------------------------
 
-public class MainActivity extends AppCompatActivity implements BackgroundTaskListener, TableListFragment.OnTableSelectedListener, TableOrdersFragment.TableOrdersFragmentListener {
+public class MainActivity extends AppCompatActivity implements BackgroundTaskListener, ViewPager.OnPageChangeListener, TableListFragment.OnTableSelectedListener, TableOrdersFragment.TableOrdersFragmentListener {
 
     // Class attributes
     private static final int REQUEST_EDIT_ORDER = 1;
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     private String PREFS_SERVER_URL_KEY;
     private String PREFS_RANDOM_DATA_KEY;
     private String DEFAULT_SERVER_URL;
+
+    //TableListFragment tableListFragment;
+    //TablePagerFragment tablePagerFragment;
+    int currentTableIndex;
 
 
     // Methods inherited from AppCompatActivity:
@@ -76,16 +81,13 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
-        // If we already downloaded the data from the server, don't do anything
-        if ( RestaurantManager.isSingletonReady() )
-            return;
+        // If we did not download the data from the server yet, try it now
+        if ( !RestaurantManager.isSingletonReady() )
+            startDataDownloadInBackground();
 
-        // Attempt to download menu data from the server
-        startDataDownloadInBackground();
-
-
-        // If the download succeeds, the fragment(s) of this activity
-        // will be loaded in onBackgroundTaskFinished().
+        // If we already downloaded the data from the server, go load the fragments
+        else
+            loadActivityFragments(currentTableIndex);
     }
 
     // Action bar menu options
@@ -205,15 +207,14 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
         // If the activity already had a TablePager fragment, just update it with the selected table
         if ( pagerFragment != null ) {
-            pagerFragment.moveToPosition(pos);
+            pagerFragment.movePagerToPosition(pos);
         }
 
         // If the activity did not have a TablePager fragment, then call to a TablePagerActivity
         else {
 
             Intent intent = new Intent(this, TablePagerActivity.class);
-            intent.putExtra(TablePagerActivity.INITIAL_POS_KEY, pos);
-            //startActivity(intent);
+            intent.putExtra(TablePagerActivity.CURRENT_POS_KEY, pos);
             startActivityForResult(intent, REQUEST_SHOW_PAGER);
         }
     }
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         startActivityForResult(intent, REQUEST_EDIT_ORDER);
     }
 
-    // What to do when a row in the order list is selected
+    // What to do when user clicks the button to add a new order to the current table
     // (launch the dish list activity to choose a dish, and wait for some response back)
     @Override
     public void onAddOrderClicked(int tablePos) {
@@ -244,6 +245,38 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         intent.putExtra(DishListActivity.TABLE_POS_KEY, tablePos);
 
         startActivityForResult(intent, REQUEST_ADD_ORDER);
+    }
+
+
+    // Methods inherited from the ViewPager.OnPageChangeListener:
+
+    // When a new page is selected, update the action bar title with the new table name
+    // and save the new index position
+    @Override
+    public void onPageSelected(int position) {
+
+        // Change the activity title to the current table of the view pager,
+        // only if the TablePagerFragment is being shown
+        // (this "if" is necessary because onPageSelected is also called when the activity layout changes,
+        // e.g. from 2 fragments to 1 fragment, and we do not want to set a table name as title in that case)
+        if (findViewById(R.id.fragment_table_pager) != null) {
+
+            String tableName = RestaurantManager.getTableAtPos(position).getName();
+            setTitle(tableName);
+
+            currentTableIndex = position;
+        }
+
+    }
+
+    // When the current page is scrolled (by the user or programmatically), do nothing
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    // When the scroll state changes (by the user or programmatically), do nothing
+    @Override
+    public void onPageScrollStateChanged(int state) {
     }
 
 
@@ -268,7 +301,8 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
 
             // Now we can proceed to load the fragment(s) contained in the activity
-            loadActivityFragments();
+            // (in case the pager fragment is shown, it will show table at position 0)
+            loadActivityFragments(0);
         }
     }
 
@@ -295,7 +329,8 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     }
 
     // This method is called to manually load the fragments of the activity
-    private void loadActivityFragments() {
+    // (the tablePos argument only used
+    private void loadActivityFragments(int tablePos) {
 
         // In case this method was called before loading the remote data, do nothing
         if ( !RestaurantManager.isSingletonReady() )
@@ -318,8 +353,9 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
                         .add(R.id.fragment_table_list,tableListFragment)
                         .commit();
             }
-            else
-                tableListFragment.syncView();
+
+            // This title will be replaced by the table name if we are showing the TablePagerFragment
+            setTitle( getString(R.string.app_name) );
         }
 
         // Make sure there is space for the TablePager
@@ -330,34 +366,15 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
 
             if ( tablePagerFragment == null) {
 
-                tablePagerFragment = TablePagerFragment.newInstance(0);
+                tablePagerFragment = TablePagerFragment.newInstance(tablePos);
 
                 fm.beginTransaction()
                         .add(R.id.fragment_table_pager, tablePagerFragment)
                         .commit();
             }
-            else
-                tablePagerFragment.syncView(0);
+
+            setTitle( RestaurantManager.getTableAtPos(tablePos).getName() );
         }
     }
 
-    // Opposed to loadActivityFragments, manually unloads all fragments of the activity
-    private void removeActivityFragments() {
-
-        FragmentManager fm = getFragmentManager();
-
-        TableListFragment tableListFragment = (TableListFragment) fm.findFragmentById(R.id.fragment_table_list);
-        if ( tableListFragment != null ) {
-            fm.beginTransaction()
-                    .remove(tableListFragment)
-                    .commit();
-        }
-
-        TablePagerFragment tablePagerFragment = (TablePagerFragment) fm.findFragmentById(R.id.fragment_table_pager);
-        if ( tablePagerFragment != null ) {
-            fm.beginTransaction()
-                    .remove(tablePagerFragment)
-                    .commit();
-        }
-    }
 }
