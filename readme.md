@@ -1,4 +1,4 @@
-# Práctica Fundamentos Android de Carlos Delgado Andr?s
+# Práctica Fundamentos Android de Carlos Delgado Andrés
 
 **WaiterDroid** es un prototipo de aplicación para Android realizada en Android Studio 2.2.2.
 
