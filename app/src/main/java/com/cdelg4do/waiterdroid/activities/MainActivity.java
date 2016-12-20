@@ -131,29 +131,6 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
             alert.show();
 
             return true;
-
-
-            /*AlertDialog dialog = new AlertDialog.Builder(this).create();
-            dialog.setTitle( getString(R.string.msg_downloadDialog_title) );
-            dialog.setMessage( getString(R.string.msg_downloadDialog_question) );
-
-            // Dialog's cancel button: do nothing
-            dialog.setButton(this.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-
-            // Dialog's Ok button: remove the activity fragments and attempt to download data from server again
-            dialog.setButton(this.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeActivityFragments();
-                        startDataDownloadInBackground();
-                    }
-                }
-            );
-
-            dialog.show();*/
         }
 
         // Go to the settings page
