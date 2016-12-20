@@ -27,6 +27,10 @@ import java.util.Map;
 public class InvoiceListAdapter extends BaseAdapter {
 
     // Class attributes
+    private final static int HEADER_VIEW_TYPE = 0;
+    private final static int FOOTER_VIEW_TYPE = 1;
+    private final static int REGULAR_VIEW_TYPE = 2;
+
     private final static int headerlayout = R.layout.row_invoice_header;
     private final static int footerlayout = R.layout.row_invoice_footer;
     private final static int itemlayout = R.layout.row_invoice_item;
@@ -54,6 +58,26 @@ public class InvoiceListAdapter extends BaseAdapter {
 
     // Methods inherited from BaseAdapter:
 
+    // The list handles three different types of views: header, footer and regular rows
+    @Override
+    public int getViewTypeCount() {
+        return 3;
+    }
+
+    // Which view type corresponds to each position in the list
+    @Override
+    public int getItemViewType(int pos) {
+
+        if (pos == 0)
+            return HEADER_VIEW_TYPE;
+
+        else if (pos == rowCount-1)
+            return FOOTER_VIEW_TYPE;
+
+        else
+            return REGULAR_VIEW_TYPE;
+    }
+
     // Total elements on the list
     @Override
     public int getCount()
@@ -80,7 +104,7 @@ public class InvoiceListAdapter extends BaseAdapter {
         return entry;
     }
 
-    // Gets the table id at a given position (not used)
+    // Gets the item id at a given position (not used)
     @Override
     public long getItemId(int pos)
     {
@@ -91,8 +115,12 @@ public class InvoiceListAdapter extends BaseAdapter {
     @Override
     public View getView(int pos, View convertView, ViewGroup parent) {
 
+        // In order to determine which layout should be used for the row 'pos',
+        // we do not compare 'pos' directly, but compare the view type corresponding to 'pos' instead
+        int viewType = getItemViewType(pos);
+
         // Header
-        if (pos == 0) {
+        if (viewType == HEADER_VIEW_TYPE) {
 
             if(convertView == null)
                 convertView = inflater.inflate(headerlayout, parent, false);
@@ -113,7 +141,7 @@ public class InvoiceListAdapter extends BaseAdapter {
         }
 
         // Footer
-        else if (pos == rowCount-1) {
+        else if (viewType == FOOTER_VIEW_TYPE) {
 
             if(convertView == null)
                 convertView = inflater.inflate(footerlayout, parent, false);
