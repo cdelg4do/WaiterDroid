@@ -1,8 +1,12 @@
 package com.cdelg4do.waiterdroid.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -103,8 +107,57 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean superReturn = super.onOptionsItemSelected(item);
 
+        // Reload data from server
+        if (item.getItemId() == R.id.menu_reloadFromServer) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle( getString(R.string.msg_downloadDialog_title) )
+                    .setMessage( getString(R.string.msg_downloadDialog_question) )
+                    .setCancelable(false)
+                    .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            removeActivityFragments();
+                            startDataDownloadInBackground();
+                        }
+                    })
+                    .setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+            return true;
+
+
+            /*AlertDialog dialog = new AlertDialog.Builder(this).create();
+            dialog.setTitle( getString(R.string.msg_downloadDialog_title) );
+            dialog.setMessage( getString(R.string.msg_downloadDialog_question) );
+
+            // Dialog's cancel button: do nothing
+            dialog.setButton(this.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            // Dialog's Ok button: remove the activity fragments and attempt to download data from server again
+            dialog.setButton(this.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeActivityFragments();
+                        startDataDownloadInBackground();
+                    }
+                }
+            );
+
+            dialog.show();*/
+        }
+
         // Go to the settings page
-        if (item.getItemId() == R.id.menu_settings) {
+        else if (item.getItemId() == R.id.menu_settings) {
 
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, REQUEST_SHOW_SETTINGS);
@@ -329,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
     }
 
     // This method is called to manually load the fragments of the activity
-    // (the tablePos argument only used
+    // (the tablePos argument is used only in case the Table Pager fragment is loaded)
     private void loadActivityFragments(int tablePos) {
 
         // In case this method was called before loading the remote data, do nothing
@@ -374,6 +427,28 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
             }
 
             setTitle( RestaurantManager.getTableAtPos(tablePos).getName() );
+        }
+    }
+
+    // This method removes all fragments from the activity
+    private void removeActivityFragments() {
+
+        FragmentManager fm = getFragmentManager();
+
+        TableListFragment tableListFragment = (TableListFragment) fm.findFragmentById(R.id.fragment_table_list);
+        if ( tableListFragment != null ) {
+
+            fm.beginTransaction()
+                    .remove(tableListFragment)
+                    .commit();
+        }
+
+        TablePagerFragment tablePagerFragment = (TablePagerFragment) fm.findFragmentById(R.id.fragment_table_pager);
+        if ( tablePagerFragment != null ) {
+
+            fm.beginTransaction()
+                    .remove(tablePagerFragment)
+                    .commit();
         }
     }
 
