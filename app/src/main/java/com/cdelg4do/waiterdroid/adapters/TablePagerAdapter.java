@@ -2,7 +2,8 @@ package com.cdelg4do.waiterdroid.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.model.Table;
@@ -12,9 +13,16 @@ import java.util.ArrayList;
 
 // This class is the adapter needed by a ViewPager to iterate between the existing tables.
 // Each page of the associated ViewPager will correspond to an instance of TableOrdersFragment.
+//
+// Class FragmentStatePagerAdapter is used here because FragmentPagerAdapter keeps all the views
+// that it loads into memory forever, while FragmentStatePagerAdapter disposes views that fall
+// outside the current and traversable views.
+//
+// If FragmentPagerAdapter was used, the fragments shown in the view pager would be always the same
+// even after reloading data from the server once and again.
 // ----------------------------------------------------------------------------
 
-public class TablePagerAdapter extends FragmentPagerAdapter {
+public class TablePagerAdapter extends FragmentStatePagerAdapter {
 
     // Object attributes
     private final ArrayList<Table> tableList;
@@ -28,7 +36,7 @@ public class TablePagerAdapter extends FragmentPagerAdapter {
     }
 
 
-    // Methods inherited from FragmentPagerAdapter:
+    // Methods inherited from FragmentStatePagerAdapter:
 
     // Get the TableOrdersFragment for a given position
     @Override
@@ -44,6 +52,14 @@ public class TablePagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return tableList.size();
+    }
+
+    // Called when the host view is attempting to determine if an item's position has changed.
+    // Returning POSITION_NONE means it changed, so the fragment always has to be retrieved again
+    // (adds a bit overhead, but ensures the fragment shown is always up to date even if the view pager repopulates)
+    @Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
     }
 
     /*
