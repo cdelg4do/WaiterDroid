@@ -28,6 +28,7 @@ import com.cdelg4do.waiterdroid.fragments.TableListFragment;
 import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment;
 import com.cdelg4do.waiterdroid.fragments.TablePagerFragment;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
+import com.cdelg4do.waiterdroid.utils.ImageCache;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 import static com.cdelg4do.waiterdroid.utils.Utils.MessageType.DIALOG;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
                     .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             removeActivityFragments();
+                            ImageCache.clear();
                             startDataDownloadInBackground();
                         }
                     })

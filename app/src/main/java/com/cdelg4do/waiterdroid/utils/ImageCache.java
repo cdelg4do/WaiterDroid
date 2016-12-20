@@ -27,4 +27,9 @@ public class ImageCache {
 
         return cache;
     }
+
+    // Clears the existing data in the cache
+    public static void clear() {
+        cache = new HashMap<String, Bitmap>();
+    }
 }
