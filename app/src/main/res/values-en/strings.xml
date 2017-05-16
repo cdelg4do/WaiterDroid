@@ -83,4 +83,14 @@
     <string name="txt_noOrders">No orders</string>
     <string name="txt_orders">orders</string>
 
+    <!-- Random special requests (for debugging) -->
+    <string name="txt_request_01">With saccharine.</string>
+    <string name="txt_request_02">Shaken, not stirred.</string>
+    <string name="txt_request_03">On the rocks.</string>
+    <string name="txt_request_04">Must be overcooked, the client hates saignant meat.</string>
+    <string name="txt_request_05">Split into two dishes, for the kids.</string>
+    <string name="txt_request_06">Without onion.</string>
+    <string name="txt_request_07">Without mayonnaise.</string>
+    <string name="txt_request_08">With a few drops of brandy.</string>
+
 </resources>

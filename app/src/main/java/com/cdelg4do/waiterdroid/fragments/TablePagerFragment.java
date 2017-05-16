@@ -1,10 +1,11 @@
 package com.cdelg4do.waiterdroid.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.cdelg4do.waiterdroid.activities.InvoiceActivity;
 import com.cdelg4do.waiterdroid.activities.MainActivity;
 import com.cdelg4do.waiterdroid.activities.TablePagerActivity;
 import com.cdelg4do.waiterdroid.adapters.TablePagerAdapter;
+import com.cdelg4do.waiterdroid.fragments.TableOrdersFragment.TableOrdersFragmentListener;
 import com.cdelg4do.waiterdroid.model.Order;
 import com.cdelg4do.waiterdroid.model.RestaurantManager;
 import com.cdelg4do.waiterdroid.model.Table;
@@ -92,12 +94,13 @@ public class TablePagerFragment extends Fragment {
 
         // Reference to UI elements
         viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        FloatingActionButton btnAddOrder = (FloatingActionButton) rootView.findViewById(R.id.btnAddOrder);
 
         // Create the adapter to load the pages into the view, and assign it to the View Pager
         TablePagerAdapter adapter = new TablePagerAdapter(getFragmentManager(),tableList);
 
         // Define the parent activity as listener for the ViewPager
-        Activity parent = getActivity();
+        final Activity parent = getActivity();
         viewPager.setAdapter(adapter);
 
         // Move the pager to the current table
@@ -109,8 +112,18 @@ public class TablePagerFragment extends Fragment {
         else if ( parent instanceof TablePagerActivity)
             viewPager.addOnPageChangeListener( (TablePagerActivity)parent );
 
-        // Set the action bar title (the name of the current table)
-        //updateActionBarTitle( tableList.get(initialTableIndex).getName() );
+        // Action for the Add Order button (will be managed by the parent activity)
+        btnAddOrder.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (parent instanceof TableOrdersFragmentListener) {
+
+                    int currentTable = viewPager.getCurrentItem();
+                    ((TableOrdersFragmentListener) parent).onAddOrderClicked(currentTable);
+                }
+            }
+        });
 
         // Return the root view of the fragment
         return rootView;

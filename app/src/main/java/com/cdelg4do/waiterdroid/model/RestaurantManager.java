@@ -1,7 +1,9 @@
 package com.cdelg4do.waiterdroid.model;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.cdelg4do.waiterdroid.R;
 import com.cdelg4do.waiterdroid.utils.Utils;
 
 import java.math.BigDecimal;
@@ -280,7 +282,7 @@ public class RestaurantManager {
     }
 
     // Generates test data
-    public static void generateRandomOrders() {
+    public static void generateRandomOrders(Context context) {
 
         if (singleton == null)
             return;
@@ -290,17 +292,17 @@ public class RestaurantManager {
         if (singleton.tables.size() < 1 || singleton.availableDishes.size() < 1 )
             return;
 
-        ArrayList<String> possibleNotes = new ArrayList<String>();
+        ArrayList<String> specialRequests = new ArrayList<String>();
 
-        possibleNotes.add("");
-        possibleNotes.add("Con sacarina.");
-        possibleNotes.add("Agitado, no batido.");
-        possibleNotes.add("Con dos piedras de hielo y en copa ancha.");
-        possibleNotes.add("Que esté bien hecho, el cliente detesta la carne cruda.");
-        possibleNotes.add("Servido a la mitad en dos platos, para los niños.");
-        possibleNotes.add("Sin cebolla.");
-        possibleNotes.add("Sin mayonesa.");
-        possibleNotes.add("Con dos gotas de brandy.");
+        specialRequests.add("");
+        specialRequests.add( context.getString(R.string.txt_request_01) );
+        specialRequests.add( context.getString(R.string.txt_request_02) );
+        specialRequests.add( context.getString(R.string.txt_request_03) );
+        specialRequests.add( context.getString(R.string.txt_request_04) );
+        specialRequests.add( context.getString(R.string.txt_request_05) );
+        specialRequests.add( context.getString(R.string.txt_request_06) );
+        specialRequests.add( context.getString(R.string.txt_request_07) );
+        specialRequests.add( context.getString(R.string.txt_request_08) );
 
         // How many tables will have some order
         int tablesOrdering = Utils.randomInt(1, singleton.tables.size() );
@@ -316,9 +318,9 @@ public class RestaurantManager {
 
                 // Dish to order
                 int dishIndex = Utils.randomInt(1, singleton.availableDishes.size() ) - 1;
-                int noteIndex = Utils.randomInt(1, possibleNotes.size()) - 1;
+                int noteIndex = Utils.randomInt(1, specialRequests.size()) - 1;
 
-                Order newOrder = new Order(singleton.availableDishes.get(dishIndex), possibleNotes.get(noteIndex));
+                Order newOrder = new Order(singleton.availableDishes.get(dishIndex), specialRequests.get(noteIndex));
                 table.addOrder(newOrder);
             }
         }

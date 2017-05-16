@@ -2,18 +2,16 @@ package com.cdelg4do.waiterdroid.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.Nullable;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -356,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements BackgroundTaskLis
         String urlString = prefs.getString(PREFS_SERVER_URL_KEY, DEFAULT_SERVER_URL);
         boolean randomData =  prefs.getBoolean(PREFS_RANDOM_DATA_KEY, false);
 
-        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask(urlString,tablePrefix,randomData);
+        DownloadAvailableDishesTask downloadDishes = new DownloadAvailableDishesTask(getApplicationContext(),urlString,tablePrefix,randomData);
         new BackgroundTaskHandler(downloadDishes,this,pDialog).execute();
     }
 

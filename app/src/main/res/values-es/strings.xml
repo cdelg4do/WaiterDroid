@@ -83,4 +83,14 @@
     <string name="txt_noOrders">No tiene ningún pedido</string>
     <string name="txt_orders">pedidos</string>
 
+    <!-- Random special requests (for debugging) -->
+    <string name="txt_request_01">Con sacarina.</string>
+    <string name="txt_request_02">Agitado, no batido.</string>
+    <string name="txt_request_03">Con dos piedras de hielo y en copa ancha.</string>
+    <string name="txt_request_04">Que esté bien hecho, el cliente detesta la carne cruda.</string>
+    <string name="txt_request_05">Servido a la mitad en dos platos, para los niños.</string>
+    <string name="txt_request_06">Sin cebolla.</string>
+    <string name="txt_request_07">Sin mayonesa.</string>
+    <string name="txt_request_08">Con dos gotas de brandy.</string>
+
 </resources>

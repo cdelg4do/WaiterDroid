@@ -1,11 +1,10 @@
 package com.cdelg4do.waiterdroid.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class TableOrdersFragment extends Fragment {
     // Object attributes
     private ArrayList<Order> orderList;                         // The order list to show
     private int tablePos;                                       // Position of the table the orders belong to, in the table list
-    private TableOrdersFragmentListener tableOrdersFragmentListener;    // Table List listener
+    public TableOrdersFragmentListener tableOrdersFragmentListener;    // Table List listener
 
 
     // Class "constructor":
@@ -110,7 +109,6 @@ public class TableOrdersFragment extends Fragment {
 
         // Reference to UI elements
         ListView list = (ListView) rootView.findViewById(android.R.id.list);
-        FloatingActionButton btnAddOrder = (FloatingActionButton) rootView.findViewById(R.id.btnAddOrder);
 
         // Adapter to load the table list into the view
         OrderListAdapter adapter = new OrderListAdapter(getActivity(), orderList, R.drawable.ic_brokenimage);
@@ -126,16 +124,6 @@ public class TableOrdersFragment extends Fragment {
 
                 if (tableOrdersFragmentListener != null)
                     tableOrdersFragmentListener.onOrderSelected(orderPos, tablePos);
-            }
-        });
-
-        // Listener for the Add Order button
-        btnAddOrder.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (tableOrdersFragmentListener != null)
-                    tableOrdersFragmentListener.onAddOrderClicked(tablePos);
             }
         });
 

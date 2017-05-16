@@ -58,16 +58,17 @@
                     android:layout_below="@id/txtDishName">
                 </TableLayout>
 
-
-            </android.support.percent.PercentRelativeLayout>
-
-            <TextView
+                <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtDishDescription"
+                android:layout_toRightOf="@+id/imgDish"
+                android:layout_below="@id/allergenTable"
                 android:layout_margin="10dp"
                 android:textSize="18sp"/>
+
+            </android.support.percent.PercentRelativeLayout>
 
             <FrameLayout
                 android:id="@+id/priceBox"

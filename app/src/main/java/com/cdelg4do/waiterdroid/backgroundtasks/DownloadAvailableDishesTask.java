@@ -1,5 +1,6 @@
 package com.cdelg4do.waiterdroid.backgroundtasks;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.cdelg4do.waiterdroid.backgroundtaskhandler.BackgroundTaskRunnable;
@@ -32,6 +33,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
     // Object attributes:
+    private Context context;
     private URL serviceUrl;
     private String tablePrefix;
     private boolean randomOrders;
@@ -40,7 +42,9 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
 
 
     // Constructor:
-    public DownloadAvailableDishesTask(String stringUrl, String tablePrefix, boolean randomOrders) {
+    public DownloadAvailableDishesTask(Context context, String stringUrl, String tablePrefix, boolean randomOrders) {
+
+        this.context = context;
 
         try                             {   serviceUrl = new URL(stringUrl);   }
         catch (MalformedURLException e) {   serviceUrl = null;                 }
@@ -207,7 +211,7 @@ public class DownloadAvailableDishesTask implements BackgroundTaskRunnable {
         // Now that all JSON data should be stored in the RestaurantManager,
         // we can generate some random orders for testing
         if (randomOrders)
-            RestaurantManager.generateRandomOrders();
+            RestaurantManager.generateRandomOrders(context);
 
 
         // If we made it till here, the operation was completed successfully

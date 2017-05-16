@@ -4,9 +4,24 @@
              android:layout_height="match_parent"
              tools:context="com.cdelg4do.waiterdroid.fragments.TablePagerFragment">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnAddOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="45dp"
+            android:src="@drawable/ic_plus"/>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>
